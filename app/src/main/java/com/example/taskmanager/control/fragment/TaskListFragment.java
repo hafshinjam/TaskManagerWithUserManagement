@@ -28,6 +28,7 @@ public class TaskListFragment extends Fragment {
     private RecyclerView mRecyclerViewTask;
     private IRepository<Task> mTaskRepository;
     private int mNumberOfTasks;
+    private TaskAdapter mAdapter;
     private String mName;
 
     public TaskListFragment() {
@@ -60,9 +61,18 @@ public class TaskListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
-        mRecyclerViewTask = view.findViewById(R.id.task_list);
+        mRecyclerViewTask = view.findViewById(R.id.recycler_view_task_list);
         mRecyclerViewTask.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
         return view;
+    }
+
+    private void updateUI() {
+        if (mAdapter == null) {
+            List<Task> tasks = mTaskRepository.getList();
+            mAdapter = new TaskAdapter(tasks);
+            mRecyclerViewTask.setAdapter(mAdapter);
+        }
     }
 
     private class TaskHolder extends RecyclerView.ViewHolder {
