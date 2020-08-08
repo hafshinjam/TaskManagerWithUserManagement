@@ -14,12 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.repository.IRepository;
 import com.example.taskmanager.repository.TaskRepository;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -29,6 +32,7 @@ import static com.example.taskmanager.control.fragment.StartManagerFragment.NUMB
 
 public class TaskListFragment extends Fragment {
     private RecyclerView mRecyclerViewTask;
+    private FloatingActionButton mButtonFloating;
     private IRepository<Task> mTaskRepository;
     private int mNumberOfTasks;
     private TaskAdapter mAdapter;
@@ -64,14 +68,35 @@ public class TaskListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
-        mRecyclerViewTask = view.findViewById(R.id.recycler_view_task_list);
+        findViews(view);
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT)
-        mRecyclerViewTask.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mRecyclerViewTask.setLayoutManager(new LinearLayoutManager(getActivity()));
         else
-            mRecyclerViewTask.setLayoutManager(new GridLayoutManager(getActivity(),2));
+            mRecyclerViewTask.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        setClickListener();
         updateUI();
         return view;
+    }
+
+    private void setClickListener() {
+        mButtonFloating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mTaskRepository.getList().size() == 0)
+                    mTaskRepository = TaskRepository.getInstance(mName, mNumberOfTasks);
+                else {
+                    Task task = new Task(mName + " " + (mTaskRepository.getList().size()+1), State.TODO);
+                    mTaskRepository.insert(task);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void findViews(View view) {
+        mButtonFloating = view.findViewById(R.id.floatingAddButton);
+        mRecyclerViewTask = view.findViewById(R.id.recycler_view_task_list);
     }
 
     private void updateUI() {
@@ -132,7 +157,7 @@ public class TaskListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
-            if (position%2==0)
+            if (position % 2 == 0)
                 holder.itemView.setBackgroundColor(Color.YELLOW);
             else
                 holder.itemView.setBackgroundColor(Color.WHITE);

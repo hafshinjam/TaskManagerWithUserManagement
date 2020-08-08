@@ -39,7 +39,7 @@ public class TaskRepository implements IRepository<Task> {
         mTasks = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_TASKS; i++) {
             Task task = new Task();
-            task.setTaskName(name + "" + (i + 1));
+            task.setTaskName(name + " " + (i + 1));
             if (i % 3 == 0)
                 task.setTaskState(State.DOING);
             else if (i % 3 == 1)
