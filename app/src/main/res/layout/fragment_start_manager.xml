@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".control.fragment.StartManagerFragment">
+
+ <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+     <EditText
+         android:id="@+id/PersonName"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:autofillHints="@string/name_start_fragment"
+         android:ems="10"
+         android:gravity="center"
+         android:hint="@string/name_start_fragment"
+         android:inputType="textPersonName"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.497"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="@id/numberOfTasks"
+         app:layout_constraintVertical_bias="1.0" />
+
+     <EditText
+         android:id="@+id/numberOfTasks"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="24dp"
+         android:autofillHints="Number Of Tasks"
+         android:ems="10"
+         android:gravity="center"
+         android:hint="@string/number_of_tasks"
+         android:inputType="number"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.497"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/PersonName"
+         tools:text="Number Of Tasks" />
+
+        <Button
+            android:id="@+id/startTaskManagmentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:gravity="center"
+            android:text="@string/start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/numberOfTasks" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TaskManager</string>
+    <string name="name_start_fragment">Name</string>
+    <string name="start">Start</string>
+    <string name="title_activity_task">TaskActivity</string>
+    <string name="number_of_tasks">Number Of Tasks</string>
+</resources>
