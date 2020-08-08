@@ -4,4 +4,6 @@
     <string name="start">Start</string>
     <string name="title_activity_task">TaskActivity</string>
     <string name="number_of_tasks">Number Of Tasks</string>
+    <string name="taskcheck">TaskCheck</string>
+    <string name="task_manager_title">Task Manager</string>
 </resources>

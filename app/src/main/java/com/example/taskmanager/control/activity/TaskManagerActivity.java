@@ -4,9 +4,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
-import com.example.taskmanager.R;
 import com.example.taskmanager.control.fragment.TaskListFragment;
 
 import static com.example.taskmanager.control.fragment.StartManagerFragment.NAME;
@@ -18,11 +16,6 @@ public class TaskManagerActivity extends SingleFragmentActivity {
         return intent;
     }
 
-  /*  @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_manager);
-    }*/
 
     @Override
     public Fragment createFragment() {
