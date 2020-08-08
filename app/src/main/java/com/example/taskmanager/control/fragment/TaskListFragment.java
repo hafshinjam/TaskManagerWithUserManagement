@@ -1,11 +1,13 @@
 package com.example.taskmanager.control.fragment;
 
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,7 +65,11 @@ public class TaskListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
         mRecyclerViewTask = view.findViewById(R.id.recycler_view_task_list);
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT)
         mRecyclerViewTask.setLayoutManager(new LinearLayoutManager(getActivity()));
+        else
+            mRecyclerViewTask.setLayoutManager(new GridLayoutManager(getActivity(),2));
         updateUI();
         return view;
     }
