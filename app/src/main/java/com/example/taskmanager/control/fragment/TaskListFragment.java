@@ -1,6 +1,7 @@
 package com.example.taskmanager.control.fragment;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -125,6 +126,10 @@ public class TaskListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
+            if (position%2==0)
+                holder.itemView.setBackgroundColor(Color.YELLOW);
+            else
+                holder.itemView.setBackgroundColor(Color.WHITE);
             Task task = mTasks.get(position);
             holder.bindTask(task);
         }

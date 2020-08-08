@@ -18,11 +18,11 @@ public class TaskManagerActivity extends SingleFragmentActivity {
         return intent;
     }
 
-    @Override
+  /*  @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_manager);
-    }
+    }*/
 
     @Override
     public Fragment createFragment() {
