@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.control.activity.TabbedTaskManagerActivity;
@@ -64,10 +65,18 @@ public class StartManagerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent startingIntent = TabbedTaskManagerActivity.newIntent(getActivity());
-                TaskRepository taskRepository = TaskRepository.newInstance(mNameText.getText().toString(),
-                        Integer.parseInt(mTaskNumber.getText().toString()));
-                startingIntent.putExtra("Name", mNameText.getText().toString());
-                startActivity(startingIntent);
+                String name = mNameText.getText().toString();
+                int numberOfTasks;
+                try {
+                    numberOfTasks = Integer.parseInt(mTaskNumber.getText().toString());
+                    TaskRepository taskRepository = TaskRepository.newInstance(name, numberOfTasks);
+                    startingIntent.putExtra("Name", mNameText.getText().toString());
+                    startActivity(startingIntent);
+                }
+                catch (Exception e){
+                    Toast.makeText(getActivity(),R.string.empty_number_test_box,Toast.LENGTH_LONG).show();
+                }
+
             }
         });
     }

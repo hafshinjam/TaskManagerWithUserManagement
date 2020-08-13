@@ -4,16 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".control.fragment.TodoTaskListFragment" >
+    tools:context=".control.fragment.TodoTaskListFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_task_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -21,14 +24,40 @@
             android:id="@+id/floatingAddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_marginEnd="6dp"
             android:clickable="true"
             android:src="@android:drawable/ic_input_add"
-            android:layout_alignParentBottom="true"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="RelativeOverlap" />
 
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/emptyListImage"
+            android:layout_width="144dp"
+            android:layout_height="176dp"
+            android:layout_marginStart="132dp"
+            android:layout_marginTop="252dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/no_task"
+            android:src="@android:drawable/ic_menu_report_image"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/emptyListText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/emptyListText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/no_task"
+            android:textColor="#CACACA"
+            android:textSize="24sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emptyListImage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

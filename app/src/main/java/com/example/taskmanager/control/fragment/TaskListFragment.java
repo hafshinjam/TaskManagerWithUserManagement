@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.model.Task;
@@ -27,21 +29,26 @@ public class TaskListFragment extends Fragment {
     protected String mName;
     protected List<Task> mTasks;
     protected RecyclerView mTaskView;
+    protected ImageView mImageEmptyList;
+    protected TextView mTextEmptyList;
+
     public TaskListFragment() {
         // Required empty public constructor
     }
 
 
+
     public static TaskListFragment newInstance() {
-TaskListFragment taskListFragment = new TaskListFragment();
+        TaskListFragment taskListFragment = new TaskListFragment();
         return taskListFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTaskRepository= TaskRepository.getInstance();
+        mTaskRepository = TaskRepository.getInstance();
         mName = mTaskRepository.getTaskStartingName();
+
 
     }
 }

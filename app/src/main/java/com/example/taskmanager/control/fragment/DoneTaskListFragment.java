@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.example.taskmanager.R;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
-import com.example.taskmanager.repository.TaskRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import java.util.List;
 
 
 public class DoneTaskListFragment extends TaskListFragment {
-    protected List<Task> mDoneTasks;
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
 
@@ -46,11 +44,11 @@ public class DoneTaskListFragment extends TaskListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDoneTasks = new ArrayList<Task>();
+        mTasks = new ArrayList<Task>();
         List<Task> taskArrayList = mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
             if (taskArrayList.get(i).getTaskState() == State.DONE)
-                mDoneTasks.add(taskArrayList.get(i));
+                mTasks.add(taskArrayList.get(i));
         }
     }
 
@@ -74,15 +72,26 @@ public class DoneTaskListFragment extends TaskListFragment {
     public void onResume() {
         super.onResume();
         updateList();
+        isListEmpty();
         mAdapter.notifyDataSetChanged();
     }
+    protected void isListEmpty() {
+        if (mTasks.size() == 0 ) {
+            mTextEmptyList.setVisibility(View.VISIBLE);
+            mImageEmptyList.setVisibility(View.VISIBLE);
+        } else {
+            mTextEmptyList.setVisibility(View.GONE);
+            mImageEmptyList.setVisibility(View.GONE);
+        }
 
+    }
     private void updateList() {
         ArrayList<Task> tasks = (ArrayList<Task>) mTaskRepository.getList();
-        for (int i = 0; i < tasks.size(); i++) {
-            if (!(mDoneTasks.contains(tasks.get(i))) && tasks.get(i).getTaskState() == State.DONE)
-                mDoneTasks.add(tasks.get(i));
-        }
+        if (tasks != null && tasks.size() > 0)
+            for (int i = 0; i < tasks.size(); i++) {
+                if (!(mTasks.contains(tasks.get(i))) && tasks.get(i).getTaskState() == State.DONE)
+                    mTasks.add(tasks.get(i));
+            }
     }
 
     private void setClickListener() {
@@ -107,7 +116,8 @@ public class DoneTaskListFragment extends TaskListFragment {
                 Task task = new Task(mName + " " + (position + 1), rand);
                 mTaskRepository.insert(task);
                 if (task.getTaskState() == State.DONE)
-                    mDoneTasks.add(task);
+                    mTasks.add(task);
+                isListEmpty();
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -116,14 +126,16 @@ public class DoneTaskListFragment extends TaskListFragment {
     private void findViews(View view) {
         mButtonFloating = view.findViewById(R.id.floatingAddButton);
         mTaskView = view.findViewById(R.id.recycler_view_task_list);
+        mImageEmptyList=view.findViewById(R.id.emptyListImage);
+        mTextEmptyList=view.findViewById(R.id.emptyListText);
     }
 
     private void updateUI() {
         if (mAdapter == null) {
-            /*List<Task> tasks = mTaskRepository.getList();*/
-            mAdapter = new TaskAdapter(mDoneTasks);
+            mAdapter = new TaskAdapter(mTasks);
             mTaskView.setAdapter(mAdapter);
         }
+        isListEmpty();
     }
 
     private class TaskHolder extends RecyclerView.ViewHolder {
@@ -148,20 +160,20 @@ public class DoneTaskListFragment extends TaskListFragment {
     private class TaskAdapter extends RecyclerView.Adapter<TaskHolder> {
 
         public List<Task> getTasks() {
-            return mDoneTasks;
+            return mTasks;
         }
 
         public void setTasks(List<Task> tasks) {
-            mDoneTasks = tasks;
+            mTasks = tasks;
         }
 
         public TaskAdapter(List<Task> tasks) {
-            mDoneTasks = tasks;
+            mTasks = tasks;
         }
 
         @Override
         public int getItemCount() {
-            return mDoneTasks.size();
+            return mTasks.size();
         }
 
         @NonNull
@@ -175,7 +187,7 @@ public class DoneTaskListFragment extends TaskListFragment {
 
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
-            Task task = mDoneTasks.get(position);
+            Task task = mTasks.get(position);
             if (position % 2 == 0)
                 holder.itemView.setBackgroundColor(Color.YELLOW);
             else
