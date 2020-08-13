@@ -25,6 +25,7 @@ public class TaskListFragment extends Fragment {
     public static final String NUMBER_OF_TASKS = "numberOfTasks";
     public static final String NAME = "Name";
     protected String mName;
+    protected List<Task> mTasks;
     protected RecyclerView mTaskView;
     public TaskListFragment() {
         // Required empty public constructor

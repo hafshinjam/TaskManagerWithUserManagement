@@ -74,14 +74,42 @@ public class DoingTaskListFragment extends TaskListFragment {
         updateUI();
         return view;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateList();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void updateList() {
+       ArrayList<Task> tasks= (ArrayList<Task>) mTaskRepository.getList();
+        for (int i = 0; i <tasks.size() ; i++) {
+            if (!(mDoingTasks.contains(tasks.get(i))) && tasks.get(i).getTaskState()==State.DOING)
+                mDoingTasks.add(tasks.get(i));
+        }
+    }
 
     private void setClickListener() {
         mButtonFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int position = mTaskRepository.getList().size();
-                Task task = new Task(mName + " " + (position + 1), State.DOING);
+                int randomState = (int) (1 + Math.random() * 3);
+                State rand;
+                switch (randomState) {
+                    case 1:
+                        rand = State.TODO;
+                        break;
+                    case 2:
+                        rand = State.DONE;
+                        break;
+                    default:
+                        rand = State.DOING;
+                        break;
+                }
+                Task task = new Task(mName + " " + (position + 1), rand);
              mTaskRepository.insert(task);
+                if (task.getTaskState() == State.DOING)
                 mDoingTasks.add(task);
                 mAdapter.notifyDataSetChanged();
             }

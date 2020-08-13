@@ -111,9 +111,9 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
                 case 0:
                     return TodoTaskListFragment.newInstance();
                 case 1:
-                    return DoingTaskListFragment.newInstance();
-                default:
                     return DoneTaskListFragment.newInstance();
+                default:
+                     return DoingTaskListFragment.newInstance();
             }
          /*   Fragment fragment = new TaskListFragment();
             Bundle args = new Bundle();
