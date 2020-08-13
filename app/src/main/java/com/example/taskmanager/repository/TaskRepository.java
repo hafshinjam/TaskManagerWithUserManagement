@@ -13,6 +13,10 @@ public class TaskRepository implements IRepository<Task> {
 
     private static String taskStartingName;
 
+    public static String getTaskStartingName() {
+        return taskStartingName;
+    }
+
     public static void setTaskStartingName(String taskStartingName) {
         TaskRepository.taskStartingName = taskStartingName;
     }
@@ -22,9 +26,14 @@ public class TaskRepository implements IRepository<Task> {
         NUMBER_OF_TASKS = numberOfTasks;
     }
 
-    public static TaskRepository getInstance(String name, int numberOfTasks) {
+    public static TaskRepository newInstance(String name, int numberOfTasks){
+        sTaskRepository = new TaskRepository(name,numberOfTasks);
+        return sTaskRepository;
+    }
+
+    public static TaskRepository getInstance() {
         if (sTaskRepository == null)
-            sTaskRepository = new TaskRepository(name, numberOfTasks);
+            sTaskRepository = TaskRepository.newInstance("", 1);
         return sTaskRepository;
     }
 

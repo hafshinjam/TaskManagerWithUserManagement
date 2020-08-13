@@ -12,7 +12,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.control.activity.TabbedTaskManagerActivity;
 import com.example.taskmanager.control.activity.TaskManagerActivity;
+import com.example.taskmanager.repository.IRepository;
+import com.example.taskmanager.repository.TaskRepository;
 
 
 public class StartManagerFragment extends Fragment {
@@ -60,10 +63,10 @@ public class StartManagerFragment extends Fragment {
         mStartMangerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startingIntent = TaskManagerActivity.newIntent(getActivity());
-                startingIntent.putExtra(NUMBER_OF_TASKS,
+                Intent startingIntent = TabbedTaskManagerActivity.newIntent(getActivity());
+                TaskRepository taskRepository = TaskRepository.newInstance(mNameText.getText().toString(),
                         Integer.parseInt(mTaskNumber.getText().toString()));
-                startingIntent.putExtra(NAME,mNameText.getText().toString());
+                startingIntent.putExtra("Name", mNameText.getText().toString());
                 startActivity(startingIntent);
             }
         });
