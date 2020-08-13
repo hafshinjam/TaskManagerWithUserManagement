@@ -30,7 +30,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class DoingTaskListFragment extends TaskListFragment {
-    protected List<Task> mTasks;
+    protected List<Task> mDoingTasks;
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
 
@@ -51,11 +51,11 @@ public class DoingTaskListFragment extends TaskListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTasks= new ArrayList<Task>();
-        List<Task> taskArrayList =  mTaskRepository.getList();
+        mDoingTasks = new ArrayList<Task>();
+        List<Task> taskArrayList = mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
-            if (taskArrayList.get(i).getTaskState()==State.DOING)
-                mTasks.add(taskArrayList.get(i));
+            if (taskArrayList.get(i).getTaskState() == State.DOING)
+                mDoingTasks.add(taskArrayList.get(i));
         }
     }
 
@@ -80,14 +80,9 @@ public class DoingTaskListFragment extends TaskListFragment {
             @Override
             public void onClick(View view) {
                 int position = mTaskRepository.getList().size();
-                Task task = new Task(mName + " " + position, State.DOING);
-                if (mTaskRepository.getList() != null) {
-                    mTaskRepository.insert(task);
-                } else {
-                    mTaskRepository = TaskRepository.getInstance();
-                    mTaskRepository.insert(task);
-                }
-                mTasks.add(task);
+                Task task = new Task(mName + " " + (position + 1), State.DOING);
+             mTaskRepository.insert(task);
+                mDoingTasks.add(task);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -101,8 +96,8 @@ public class DoingTaskListFragment extends TaskListFragment {
 
     private void updateUI() {
         if (mAdapter == null) {
-            List<Task> tasks = mTaskRepository.getList();
-            mAdapter = new TaskAdapter(tasks);
+          /*  List<Task> tasks = mTaskRepository.getList();*/
+            mAdapter = new TaskAdapter(mDoingTasks);
             mTaskView.setAdapter(mAdapter);
         }
     }
@@ -129,20 +124,20 @@ public class DoingTaskListFragment extends TaskListFragment {
     private class TaskAdapter extends RecyclerView.Adapter<TaskHolder> {
 
         public List<Task> getTasks() {
-            return mTasks;
+            return mDoingTasks;
         }
 
         public void setTasks(List<Task> tasks) {
-            mTasks = tasks;
+            mDoingTasks = tasks;
         }
 
         public TaskAdapter(List<Task> tasks) {
-            mTasks = tasks;
+            mDoingTasks = tasks;
         }
 
         @Override
         public int getItemCount() {
-            return mTasks.size();
+            return mDoingTasks.size();
         }
 
         @NonNull
@@ -156,13 +151,13 @@ public class DoingTaskListFragment extends TaskListFragment {
 
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
-            Task task = mTasks.get(position);
-                if (position % 2 == 0)
-                    holder.itemView.setBackgroundColor(Color.YELLOW);
-                else
-                    holder.itemView.setBackgroundColor(Color.WHITE);
+            Task task = mDoingTasks.get(position);
+            if (position % 2 == 0)
+                holder.itemView.setBackgroundColor(Color.YELLOW);
+            else
+                holder.itemView.setBackgroundColor(Color.WHITE);
 
-                holder.bindTask(task);
+            holder.bindTask(task);
 
         }
     }

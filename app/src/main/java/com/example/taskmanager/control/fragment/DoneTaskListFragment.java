@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +25,7 @@ import java.util.List;
 
 
 public class DoneTaskListFragment extends TaskListFragment {
-    protected List<Task> mTasks;
+    protected List<Task> mDoneTasks;
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
 
@@ -47,11 +46,11 @@ public class DoneTaskListFragment extends TaskListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTasks = new ArrayList<Task>();
+        mDoneTasks = new ArrayList<Task>();
         List<Task> taskArrayList = mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
             if (taskArrayList.get(i).getTaskState() == State.DONE)
-                mTasks.add(taskArrayList.get(i));
+                mDoneTasks.add(taskArrayList.get(i));
         }
     }
 
@@ -76,14 +75,9 @@ public class DoneTaskListFragment extends TaskListFragment {
             @Override
             public void onClick(View view) {
                 int position = mTaskRepository.getList().size();
-                Task task = new Task(mName + " " + position, State.DONE);
-                if (mTaskRepository.getList() != null) {
-                    mTaskRepository.insert(task);
-                } else {
-                    mTaskRepository = TaskRepository.getInstance();
-                    mTaskRepository.insert(task);
-                }
-                mTasks.add(task);
+                Task task = new Task(mName + " " + (position + 1), State.DONE);
+                mTaskRepository.insert(task);
+                mDoneTasks.add(task);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -96,8 +90,8 @@ public class DoneTaskListFragment extends TaskListFragment {
 
     private void updateUI() {
         if (mAdapter == null) {
-            List<Task> tasks = mTaskRepository.getList();
-            mAdapter = new TaskAdapter(tasks);
+            /*List<Task> tasks = mTaskRepository.getList();*/
+            mAdapter = new TaskAdapter(mDoneTasks);
             mTaskView.setAdapter(mAdapter);
         }
     }
@@ -124,20 +118,20 @@ public class DoneTaskListFragment extends TaskListFragment {
     private class TaskAdapter extends RecyclerView.Adapter<TaskHolder> {
 
         public List<Task> getTasks() {
-            return mTasks;
+            return mDoneTasks;
         }
 
         public void setTasks(List<Task> tasks) {
-            mTasks = tasks;
+            mDoneTasks = tasks;
         }
 
         public TaskAdapter(List<Task> tasks) {
-            mTasks = tasks;
+            mDoneTasks = tasks;
         }
 
         @Override
         public int getItemCount() {
-            return mTasks.size();
+            return mDoneTasks.size();
         }
 
         @NonNull
@@ -151,7 +145,7 @@ public class DoneTaskListFragment extends TaskListFragment {
 
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
-            Task task = mTasks.get(position);
+            Task task = mDoneTasks.get(position);
             if (position % 2 == 0)
                 holder.itemView.setBackgroundColor(Color.YELLOW);
             else

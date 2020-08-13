@@ -26,7 +26,7 @@ import java.util.List;
 
 
 public class TodoTaskListFragment extends TaskListFragment {
-    protected List<Task> mTasks;
+    protected List<Task> mTodoTasks;
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
 
@@ -42,14 +42,15 @@ public class TodoTaskListFragment extends TaskListFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTasks= new ArrayList<Task>();
-        List<Task> taskArrayList =  mTaskRepository.getList();
+        mTodoTasks = new ArrayList<Task>();
+        List<Task> taskArrayList = mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
-            if (taskArrayList.get(i).getTaskState()==State.TODO)
-                mTasks.add(taskArrayList.get(i));
+            if (taskArrayList.get(i).getTaskState() == State.TODO)
+                mTodoTasks.add(taskArrayList.get(i));
         }
     }
 
@@ -74,14 +75,9 @@ public class TodoTaskListFragment extends TaskListFragment {
             @Override
             public void onClick(View view) {
                 int position = mTaskRepository.getList().size();
-                Task task = new Task(mName + " " + position, State.TODO);
-                if (mTaskRepository.getList() != null) {
-                    mTaskRepository.insert(task);
-                } else {
-                    mTaskRepository = TaskRepository.getInstance();
-                    mTaskRepository.insert(task);
-                }
-                mTasks.add(task);
+                Task task = new Task(mName + " " + (position + 1), State.TODO);
+                 mTaskRepository.insert(task);
+                mTodoTasks.add(task);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -94,8 +90,8 @@ public class TodoTaskListFragment extends TaskListFragment {
 
     private void updateUI() {
         if (mAdapter == null) {
-            List<Task> tasks = mTaskRepository.getList();
-            mAdapter = new TaskAdapter(tasks);
+          /*  List<Task> tasks = mTaskRepository.getList();*/
+            mAdapter = new TaskAdapter(mTodoTasks);
             mTaskView.setAdapter(mAdapter);
         }
     }
@@ -122,20 +118,20 @@ public class TodoTaskListFragment extends TaskListFragment {
     private class TaskAdapter extends RecyclerView.Adapter<TaskHolder> {
 
         public List<Task> getTasks() {
-            return mTasks;
+            return mTodoTasks;
         }
 
         public void setTasks(List<Task> tasks) {
-            mTasks = tasks;
+            mTodoTasks = tasks;
         }
 
         public TaskAdapter(List<Task> tasks) {
-            mTasks = tasks;
+            mTodoTasks = tasks;
         }
 
         @Override
         public int getItemCount() {
-            return mTasks.size();
+            return mTodoTasks.size();
         }
 
         @NonNull
@@ -149,13 +145,13 @@ public class TodoTaskListFragment extends TaskListFragment {
 
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
-            Task task = mTasks.get(position);
-                if (position % 2 == 0)
-                    holder.itemView.setBackgroundColor(Color.YELLOW);
-                else
-                    holder.itemView.setBackgroundColor(Color.WHITE);
+            Task task = mTodoTasks.get(position);
+            if (position % 2 == 0)
+                holder.itemView.setBackgroundColor(Color.YELLOW);
+            else
+                holder.itemView.setBackgroundColor(Color.WHITE);
 
-                holder.bindTask(task);
+            holder.bindTask(task);
         }
     }
 
