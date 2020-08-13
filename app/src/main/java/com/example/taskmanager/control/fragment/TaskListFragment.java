@@ -26,7 +26,6 @@ public class TaskListFragment extends Fragment {
     public static final String NAME = "Name";
     protected String mName;
     protected RecyclerView mTaskView;
-    protected List<Task> mTasks;
     public TaskListFragment() {
         // Required empty public constructor
     }

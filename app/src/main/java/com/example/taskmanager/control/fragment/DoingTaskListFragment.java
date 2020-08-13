@@ -21,6 +21,7 @@ import com.example.taskmanager.model.Task;
 import com.example.taskmanager.repository.TaskRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class DoingTaskListFragment extends TaskListFragment {
+    protected List<Task> mTasks;
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
 
@@ -37,10 +39,19 @@ public class DoingTaskListFragment extends TaskListFragment {
         // Required empty public constructor
     }
 
+    public static DoingTaskListFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        DoingTaskListFragment fragment = new DoingTaskListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTasks= new ArrayList<Task>();
         List<Task> taskArrayList =  mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
             if (taskArrayList.get(i).getTaskState()==State.DOING)

@@ -26,22 +26,32 @@ import java.util.List;
 
 
 public class DoneTaskListFragment extends TaskListFragment {
+    protected List<Task> mTasks;
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
-
 
 
     public DoneTaskListFragment() {
         // Required empty public constructor
     }
 
+    public static DoneTaskListFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        DoneTaskListFragment fragment = new DoneTaskListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        List<Task> taskArrayList =  mTaskRepository.getList();
+        mTasks = new ArrayList<Task>();
+        List<Task> taskArrayList = mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
-            if (taskArrayList.get(i).getTaskState()==State.DONE)
-            mTasks.add(taskArrayList.get(i));
+            if (taskArrayList.get(i).getTaskState() == State.DONE)
+                mTasks.add(taskArrayList.get(i));
         }
     }
 
@@ -91,6 +101,7 @@ public class DoneTaskListFragment extends TaskListFragment {
             mTaskView.setAdapter(mAdapter);
         }
     }
+
     private class TaskHolder extends RecyclerView.ViewHolder {
         private Task mTask;
         private TextView mTextViewTaskName;
@@ -141,12 +152,12 @@ public class DoneTaskListFragment extends TaskListFragment {
         @Override
         public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
             Task task = mTasks.get(position);
-                if (position % 2 == 0)
-                    holder.itemView.setBackgroundColor(Color.YELLOW);
-                else
-                    holder.itemView.setBackgroundColor(Color.WHITE);
+            if (position % 2 == 0)
+                holder.itemView.setBackgroundColor(Color.YELLOW);
+            else
+                holder.itemView.setBackgroundColor(Color.WHITE);
 
-                holder.bindTask(task);
+            holder.bindTask(task);
         }
     }
 }

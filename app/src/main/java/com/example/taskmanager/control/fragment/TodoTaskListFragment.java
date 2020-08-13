@@ -21,10 +21,12 @@ import com.example.taskmanager.model.Task;
 import com.example.taskmanager.repository.TaskRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class TodoTaskListFragment extends TaskListFragment {
+    protected List<Task> mTasks;
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
 
@@ -33,9 +35,17 @@ public class TodoTaskListFragment extends TaskListFragment {
         // Required empty public constructor
     }
 
+    public static TodoTaskListFragment newInstance() {
+        Bundle args = new Bundle();
+
+        TodoTaskListFragment fragment = new TodoTaskListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTasks= new ArrayList<Task>();
         List<Task> taskArrayList =  mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
             if (taskArrayList.get(i).getTaskState()==State.TODO)

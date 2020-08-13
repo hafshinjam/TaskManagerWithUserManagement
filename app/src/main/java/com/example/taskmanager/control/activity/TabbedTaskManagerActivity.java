@@ -128,9 +128,9 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
     }
 
 
-    public Fragment CreateFragment() {
+    /*public Fragment CreateFragment() {
         return TodoTaskListFragment.newInstance();
-    }
+    }*/
 
     private void findViews() {
         mTaskViewPager = findViewById(R.id.task_view_pager);
