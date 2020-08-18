@@ -45,11 +45,12 @@ public class TodoTaskListFragment extends TaskListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTasks = new ArrayList<Task>();
-        List<Task> taskArrayList = mTaskRepository.getList();
+        mTasks = mTaskRepository.getStateList(State.TODO);
+/*        List<Task> taskArrayList = mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
             if (taskArrayList.get(i).getTaskState() == State.TODO)
                 mTasks.add(taskArrayList.get(i));
-        }
+        }*/
     }
 
     @Override
@@ -86,19 +87,19 @@ public class TodoTaskListFragment extends TaskListFragment {
 
     }
     private void updateList() {
-        ArrayList<Task> tasks = (ArrayList<Task>) mTaskRepository.getList();
-        if (tasks != null && tasks.size() > 0)
+        mTasks = mTaskRepository.getStateList(State.TODO);
+ /*       if (tasks != null && tasks.size() > 0)
             for (int i = 0; i < tasks.size(); i++) {
                 if (!(mTasks.contains(tasks.get(i))) && tasks.get(i).getTaskState() == State.TODO)
                     mTasks.add(tasks.get(i));
-            }
+            }*/
     }
 
     private void setClickListener() {
         mButtonFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = mTaskRepository.getList().size();
+/*                int position = mTaskRepository.getList().size();
                 int randomState = (int) (1 + Math.random() * 3);
                 State rand;
                 switch (randomState) {
@@ -115,7 +116,7 @@ public class TodoTaskListFragment extends TaskListFragment {
                 Task task = new Task(mName + " " + (position + 1), rand);
                 mTaskRepository.insert(task);
                 if (task.getTaskState() == State.TODO)
-                    mTasks.add(task);
+                    mTasks.add(task);*/
                 isListEmpty();
                 mAdapter.notifyDataSetChanged();
             }

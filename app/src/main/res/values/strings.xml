@@ -10,4 +10,16 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_task">There is no Task With This Status</string>
     <string name="empty_number_test_box">Enter a Number</string>
+    <string name="title_text">Title</string>
+    <string name="description_text">Description</string>
+    <string name="doing_text">Doing</string>
+    <string name="todo_text">ToDo</string>
+    <string name="text">Done</string>
+    <string name="save_button">Save</string>
+    <string name="date_picker_title">Pick your Date</string>
+    <string-array name="states">
+        <item>ToDo</item>
+        <item>Doing</item>
+        <item>Done</item>
+    </string-array>
 </resources>

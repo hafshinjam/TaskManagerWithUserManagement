@@ -50,11 +50,12 @@ public class DoingTaskListFragment extends TaskListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTasks = new ArrayList<Task>();
-        List<Task> taskArrayList = mTaskRepository.getList();
+        mTasks = mTaskRepository.getStateList(State.DOING);
+        /*       List<Task> taskArrayList = mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
             if (taskArrayList.get(i).getTaskState() == State.DOING)
                 mTasks.add(taskArrayList.get(i));
-        }
+        }*/
     }
 
     @Override
@@ -80,8 +81,9 @@ public class DoingTaskListFragment extends TaskListFragment {
         isListEmpty();
         mAdapter.notifyDataSetChanged();
     }
+
     protected void isListEmpty() {
-        if (mTasks.size() == 0 ) {
+        if (mTasks.size() == 0) {
             mTextEmptyList.setVisibility(View.VISIBLE);
             mImageEmptyList.setVisibility(View.VISIBLE);
         } else {
@@ -90,13 +92,14 @@ public class DoingTaskListFragment extends TaskListFragment {
         }
 
     }
+
     private void updateList() {
-        ArrayList<Task> tasks = (ArrayList<Task>) mTaskRepository.getList();
-        if (tasks != null && tasks.size() > 0)
+     mTasks = mTaskRepository.getStateList(State.DOING);
+ /*       if (tasks != null && tasks.size() > 0)
             for (int i = 0; i < tasks.size(); i++) {
                 if (!(mTasks.contains(tasks.get(i))) && tasks.get(i).getTaskState() == State.DOING)
                     mTasks.add(tasks.get(i));
-            }
+            }*/
     }
 
     private void setClickListener() {
@@ -104,7 +107,7 @@ public class DoingTaskListFragment extends TaskListFragment {
             @Override
             public void onClick(View view) {
                 int position = mTaskRepository.getList().size();
-                int randomState = (int) (1 + Math.random() * 3);
+/*                int randomState = (int) (1 + Math.random() * 3);
                 State rand;
                 switch (randomState) {
                     case 1:
@@ -120,7 +123,7 @@ public class DoingTaskListFragment extends TaskListFragment {
                 Task task = new Task(mName + " " + (position + 1), rand);
                 mTaskRepository.insert(task);
                 if (task.getTaskState() == State.DOING)
-                    mTasks.add(task);
+                    mTasks.add(task);*/
                 isListEmpty();
                 mAdapter.notifyDataSetChanged();
             }
@@ -130,8 +133,8 @@ public class DoingTaskListFragment extends TaskListFragment {
     private void findViews(View view) {
         mButtonFloating = view.findViewById(R.id.floatingAddButton);
         mTaskView = view.findViewById(R.id.recycler_view_task_list);
-        mImageEmptyList=view.findViewById(R.id.emptyListImage);
-        mTextEmptyList=view.findViewById(R.id.emptyListText);
+        mImageEmptyList = view.findViewById(R.id.emptyListImage);
+        mTextEmptyList = view.findViewById(R.id.emptyListText);
     }
 
     private void updateUI() {

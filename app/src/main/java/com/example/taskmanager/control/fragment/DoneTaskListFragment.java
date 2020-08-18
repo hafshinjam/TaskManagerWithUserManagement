@@ -20,12 +20,15 @@ import com.example.taskmanager.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
 public class DoneTaskListFragment extends TaskListFragment {
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
+    private static final int CREATE_NEW_TASK_REQUEST_CODE = 0;
+    private String DIALOG_CREATE_TASK = "com.example.taskmanager.control.fragment.DialogCreateTask";
 
 
     public DoneTaskListFragment() {
@@ -45,11 +48,12 @@ public class DoneTaskListFragment extends TaskListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTasks = new ArrayList<Task>();
-        List<Task> taskArrayList = mTaskRepository.getList();
+        mTasks = mTaskRepository.getStateList(State.DONE);
+        /*        List<Task> taskArrayList = mTaskRepository.getList();
         for (int i = 0; i < taskArrayList.size(); i++) {
             if (taskArrayList.get(i).getTaskState() == State.DONE)
                 mTasks.add(taskArrayList.get(i));
-        }
+        }*/
     }
 
     @Override
@@ -75,8 +79,9 @@ public class DoneTaskListFragment extends TaskListFragment {
         isListEmpty();
         mAdapter.notifyDataSetChanged();
     }
+
     protected void isListEmpty() {
-        if (mTasks.size() == 0 ) {
+        if (mTasks.size() == 0) {
             mTextEmptyList.setVisibility(View.VISIBLE);
             mImageEmptyList.setVisibility(View.VISIBLE);
         } else {
@@ -85,20 +90,28 @@ public class DoneTaskListFragment extends TaskListFragment {
         }
 
     }
+
     private void updateList() {
-        ArrayList<Task> tasks = (ArrayList<Task>) mTaskRepository.getList();
-        if (tasks != null && tasks.size() > 0)
+        mTasks = mTaskRepository.getStateList(State.DONE);
+/*        if (tasks != null && tasks.size() > 0)
             for (int i = 0; i < tasks.size(); i++) {
                 if (!(mTasks.contains(tasks.get(i))) && tasks.get(i).getTaskState() == State.DONE)
                     mTasks.add(tasks.get(i));
-            }
+            }*/
     }
 
     private void setClickListener() {
         mButtonFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = mTaskRepository.getList().size();
+                Task task = new Task("new Task", "Description", State.TODO,
+                        Calendar.getInstance().getTime());
+                TaskCreateFragment taskCreateFragment = TaskCreateFragment.newInstance(task);
+
+                taskCreateFragment.setTargetFragment(DoneTaskListFragment.this, CREATE_NEW_TASK_REQUEST_CODE);
+
+                taskCreateFragment.show(getFragmentManager(), DIALOG_CREATE_TASK);
+              /*  int position = mTaskRepository.getList().size();
                 int randomState = (int) (1 + Math.random() * 3);
                 State rand;
                 switch (randomState) {
@@ -116,7 +129,7 @@ public class DoneTaskListFragment extends TaskListFragment {
                 Task task = new Task(mName + " " + (position + 1), rand);
                 mTaskRepository.insert(task);
                 if (task.getTaskState() == State.DONE)
-                    mTasks.add(task);
+                    mTasks.add(task);*/
                 isListEmpty();
                 mAdapter.notifyDataSetChanged();
             }
@@ -126,8 +139,8 @@ public class DoneTaskListFragment extends TaskListFragment {
     private void findViews(View view) {
         mButtonFloating = view.findViewById(R.id.floatingAddButton);
         mTaskView = view.findViewById(R.id.recycler_view_task_list);
-        mImageEmptyList=view.findViewById(R.id.emptyListImage);
-        mTextEmptyList=view.findViewById(R.id.emptyListText);
+        mImageEmptyList = view.findViewById(R.id.emptyListImage);
+        mTextEmptyList = view.findViewById(R.id.emptyListText);
     }
 
     private void updateUI() {

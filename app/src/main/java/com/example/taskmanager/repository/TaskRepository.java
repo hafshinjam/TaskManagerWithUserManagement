@@ -63,6 +63,15 @@ public class TaskRepository implements IRepository<Task> {
         return mTasks;
     }
 
+    public List<Task> getStateList(State state) {
+       List<Task> todoList = new ArrayList<>();
+        for (Task task : mTasks) {
+            if (task.getTaskState()==state)
+                todoList.add(task);
+        }
+        return todoList;
+    }
+
     @Override
     public Task get(UUID uuid) {
         for (Task task : mTasks) {

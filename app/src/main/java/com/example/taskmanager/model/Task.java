@@ -4,21 +4,55 @@ package com.example.taskmanager.model;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class Task implements Serializable {
     private UUID taskID;
-    private String TaskName;
-    private State TaskState;
+    private String taskName;
+    private String taskDescription;
+    private State taskState;
+    private Date taskDate;
 
     public Task() {
         taskID = UUID.randomUUID();
     }
 
-    public Task(String taskName, State taskState) {
+    public Task(String taskName, String taskDescription, State taskState, Date taskDate) {
         this();
-        TaskName = taskName;
-        TaskState = taskState;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.taskState = taskState;
+        this.taskDate = taskDate;
+    }
+
+    public String getTaskDescription() {
+        return taskDescription;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
+    public void setTaskDate(Date taskDate) {
+        this.taskDate = taskDate;
+    }
+
+    public String getDateString() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd");
+        String currentDate = formatter.format(Date.parse(taskDate.toString()));
+        return currentDate;
+    }
+
+    public String getTimeString() {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:SS");
+        String currentTime = formatter.format(Date.parse(taskDate.toString()));
+        return currentTime;
+    }
+
+    public Date getTaskDate() {
+        return taskDate;
     }
 
     public UUID getTaskID() {
@@ -30,15 +64,15 @@ public class Task implements Serializable {
     }
 
     public String getTaskName() {
-        return TaskName;
+        return taskName;
     }
 
     public void setTaskName(String taskName) {
-        TaskName = taskName;
+        this.taskName = taskName;
     }
 
     public State getTaskState() {
-        return TaskState;
+        return taskState;
     }
 
     @Override
@@ -57,6 +91,6 @@ public class Task implements Serializable {
     }
 
     public void setTaskState(State taskState) {
-        TaskState = taskState;
+        this.taskState = taskState;
     }
 }
