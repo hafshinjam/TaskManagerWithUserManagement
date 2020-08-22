@@ -7,7 +7,7 @@
     tools:context=".control.fragment.TodoTaskListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ConstraintLayout"
+        android:id="@+id/task_row_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

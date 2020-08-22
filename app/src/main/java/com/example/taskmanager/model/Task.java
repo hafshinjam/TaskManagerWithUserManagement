@@ -8,23 +8,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+
 public class Task implements Serializable {
     private UUID taskID;
     private String taskName;
     private String taskDescription;
     private State taskState;
     private Date taskDate;
+    private User taskInitiator;
 
     public Task() {
         taskID = UUID.randomUUID();
     }
 
-    public Task(String taskName, String taskDescription, State taskState, Date taskDate) {
+    public Task(String taskName, String taskDescription, State taskState, Date taskDate,User taskInitiator) {
         this();
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskState = taskState;
         this.taskDate = taskDate;
+        this.taskInitiator=taskInitiator;
+    }
+
+    public User getTaskInitiator() {
+        return taskInitiator;
     }
 
     public String getTaskDescription() {

@@ -1,5 +1,6 @@
 package com.example.taskmanager.control.fragment;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,21 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
+import com.example.taskmanager.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DoingTaskListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DoingTaskListFragment extends TaskListFragment {
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
@@ -37,11 +36,11 @@ public class DoingTaskListFragment extends TaskListFragment {
         // Required empty public constructor
     }
 
-    public static DoingTaskListFragment newInstance() {
+    public static DoingTaskListFragment newInstance(User user) {
 
         Bundle args = new Bundle();
-
         DoingTaskListFragment fragment = new DoingTaskListFragment();
+        args.putSerializable("CurrentUser", user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,12 +49,14 @@ public class DoingTaskListFragment extends TaskListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTasks = new ArrayList<Task>();
-        mTasks = mTaskRepository.getStateList(State.DOING);
-        /*       List<Task> taskArrayList = mTaskRepository.getList();
-        for (int i = 0; i < taskArrayList.size(); i++) {
-            if (taskArrayList.get(i).getTaskState() == State.DOING)
-                mTasks.add(taskArrayList.get(i));
-        }*/
+        if (getArguments() != null) {
+            CurrentUser = (User) getArguments().getSerializable("CurrentUser");
+            if (CurrentUser.getUserName() .equals("admin"))
+                mTasks = mTaskRepository.getStateList(State.DOING);
+            else mTasks = mTaskRepository.getStateList(State.DOING, CurrentUser);
+        }
+
+
     }
 
     @Override
@@ -94,36 +95,23 @@ public class DoingTaskListFragment extends TaskListFragment {
     }
 
     private void updateList() {
-     mTasks = mTaskRepository.getStateList(State.DOING);
- /*       if (tasks != null && tasks.size() > 0)
-            for (int i = 0; i < tasks.size(); i++) {
-                if (!(mTasks.contains(tasks.get(i))) && tasks.get(i).getTaskState() == State.DOING)
-                    mTasks.add(tasks.get(i));
-            }*/
+        if (CurrentUser.getUserName() .equals("admin"))
+            mTasks = mTaskRepository.getStateList(State.DOING);
+        else mTasks = mTaskRepository.getStateList(State.DOING, CurrentUser);
+
     }
 
     private void setClickListener() {
         mButtonFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = mTaskRepository.getList().size();
-/*                int randomState = (int) (1 + Math.random() * 3);
-                State rand;
-                switch (randomState) {
-                    case 1:
-                        rand = State.TODO;
-                        break;
-                    case 2:
-                        rand = State.DONE;
-                        break;
-                    default:
-                        rand = State.DOING;
-                        break;
-                }
-                Task task = new Task(mName + " " + (position + 1), rand);
-                mTaskRepository.insert(task);
-                if (task.getTaskState() == State.DOING)
-                    mTasks.add(task);*/
+                Task task = new Task("new Task", "Description", State.TODO,
+                        Calendar.getInstance().getTime(), CurrentUser);
+                TaskCreateFragment taskCreateFragment = TaskCreateFragment.newInstance(task);
+
+                taskCreateFragment.setTargetFragment(DoingTaskListFragment.this, CREATE_NEW_TASK_REQUEST_CODE);
+
+                taskCreateFragment.show(getFragmentManager(), DIALOG_CREATE_TASK);
                 isListEmpty();
                 mAdapter.notifyDataSetChanged();
             }
@@ -149,11 +137,23 @@ public class DoingTaskListFragment extends TaskListFragment {
         private Task mTask;
         private TextView mTextViewTaskName;
         private TextView mTextViewTaskStatus;
+        private TextView mTaskDateText;
+        private Button mTaskIcon;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             mTextViewTaskName = itemView.findViewById(R.id.name_row);
             mTextViewTaskStatus = itemView.findViewById(R.id.status_row);
+            mTaskDateText = itemView.findViewById(R.id.task_date);
+            mTaskIcon = itemView.findViewById(R.id.icon_image);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditTaskDialogFragment editTaskDialogFragment = EditTaskDialogFragment.newInstance(mTask);
+                    editTaskDialogFragment.setTargetFragment(DoingTaskListFragment.this, EDIT_TASK_REQUEST_CODE);
+                    editTaskDialogFragment.show(getFragmentManager(), "DialogEditTask");
+                }
+            });
 
         }
 
@@ -161,6 +161,8 @@ public class DoingTaskListFragment extends TaskListFragment {
             mTask = task;
             mTextViewTaskName.setText(task.getTaskName());
             mTextViewTaskStatus.setText(task.getTaskState().toString());
+            mTaskDateText.setText(task.getTaskDate().toString());
+            mTaskIcon.setText(task.getTaskName().substring(0, 1));
         }
     }
 

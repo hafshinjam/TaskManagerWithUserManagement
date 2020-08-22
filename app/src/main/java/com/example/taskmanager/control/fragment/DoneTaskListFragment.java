@@ -1,7 +1,10 @@
 package com.example.taskmanager.control.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,34 +15,37 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
+import com.example.taskmanager.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
 public class DoneTaskListFragment extends TaskListFragment {
+
     private TaskAdapter mAdapter;
     private FloatingActionButton mButtonFloating;
-    private static final int CREATE_NEW_TASK_REQUEST_CODE = 0;
-    private String DIALOG_CREATE_TASK = "com.example.taskmanager.control.fragment.DialogCreateTask";
-
-
     public DoneTaskListFragment() {
         // Required empty public constructor
     }
 
-    public static DoneTaskListFragment newInstance() {
+
+
+    public static DoneTaskListFragment newInstance(User user) {
 
         Bundle args = new Bundle();
 
         DoneTaskListFragment fragment = new DoneTaskListFragment();
+        args.putSerializable("CurrentUser", user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,13 +53,13 @@ public class DoneTaskListFragment extends TaskListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTasks = new ArrayList<Task>();
-        mTasks = mTaskRepository.getStateList(State.DONE);
-        /*        List<Task> taskArrayList = mTaskRepository.getList();
-        for (int i = 0; i < taskArrayList.size(); i++) {
-            if (taskArrayList.get(i).getTaskState() == State.DONE)
-                mTasks.add(taskArrayList.get(i));
-        }*/
+        mTasks = new ArrayList<>();
+        if (getArguments() != null) {
+            CurrentUser = (User) getArguments().getSerializable("CurrentUser");
+            if (CurrentUser.getUserName() .equals("admin"))
+                mTasks = mTaskRepository.getStateList(State.DONE);
+            else mTasks = mTaskRepository.getStateList(State.DONE, CurrentUser);
+        }
     }
 
     @Override
@@ -92,12 +98,9 @@ public class DoneTaskListFragment extends TaskListFragment {
     }
 
     private void updateList() {
-        mTasks = mTaskRepository.getStateList(State.DONE);
-/*        if (tasks != null && tasks.size() > 0)
-            for (int i = 0; i < tasks.size(); i++) {
-                if (!(mTasks.contains(tasks.get(i))) && tasks.get(i).getTaskState() == State.DONE)
-                    mTasks.add(tasks.get(i));
-            }*/
+        if (CurrentUser.getUserName() .equals("admin") )
+            mTasks = mTaskRepository.getStateList(State.DONE);
+        else mTasks = mTaskRepository.getStateList(State.DONE, CurrentUser);
     }
 
     private void setClickListener() {
@@ -105,33 +108,12 @@ public class DoneTaskListFragment extends TaskListFragment {
             @Override
             public void onClick(View view) {
                 Task task = new Task("new Task", "Description", State.TODO,
-                        Calendar.getInstance().getTime());
+                        Calendar.getInstance().getTime(),CurrentUser);
                 TaskCreateFragment taskCreateFragment = TaskCreateFragment.newInstance(task);
 
                 taskCreateFragment.setTargetFragment(DoneTaskListFragment.this, CREATE_NEW_TASK_REQUEST_CODE);
 
                 taskCreateFragment.show(getFragmentManager(), DIALOG_CREATE_TASK);
-              /*  int position = mTaskRepository.getList().size();
-                int randomState = (int) (1 + Math.random() * 3);
-                State rand;
-                switch (randomState) {
-                    case 1:
-                        rand = State.TODO;
-                        break;
-                    case 2:
-                        rand = State.DONE;
-                        break;
-                    default:
-                        rand = State.DOING;
-                        break;
-
-                }
-                Task task = new Task(mName + " " + (position + 1), rand);
-                mTaskRepository.insert(task);
-                if (task.getTaskState() == State.DONE)
-                    mTasks.add(task);*/
-                isListEmpty();
-                mAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -155,19 +137,33 @@ public class DoneTaskListFragment extends TaskListFragment {
         private Task mTask;
         private TextView mTextViewTaskName;
         private TextView mTextViewTaskStatus;
+        private TextView mTaskDateText;
+        private Button mTaskIcon;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             mTextViewTaskName = itemView.findViewById(R.id.name_row);
             mTextViewTaskStatus = itemView.findViewById(R.id.status_row);
-
+            mTaskDateText = itemView.findViewById(R.id.task_date);
+            mTaskIcon=itemView.findViewById(R.id.icon_image);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditTaskDialogFragment editTaskDialogFragment = EditTaskDialogFragment.newInstance(mTask);
+                    editTaskDialogFragment.setTargetFragment(DoneTaskListFragment.this, EDIT_TASK_REQUEST_CODE);
+                    editTaskDialogFragment.show(getFragmentManager(),"DialogEditTask");
+                }
+            });
         }
 
         public void bindTask(Task task) {
             mTask = task;
             mTextViewTaskName.setText(task.getTaskName());
             mTextViewTaskStatus.setText(task.getTaskState().toString());
+            mTaskDateText.setText(task.getTaskDate().toString());
+            mTaskIcon.setText(task.getTaskName().substring(0,1));
         }
+
     }
 
     private class TaskAdapter extends RecyclerView.Adapter<TaskHolder> {

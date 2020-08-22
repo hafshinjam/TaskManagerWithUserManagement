@@ -10,15 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".control.activity.TabbedTaskManagerActivity" />
-        <activity android:name=".control.activity.TaskManagerActivity" />
-        <activity android:name=".control.activity.StartManagerActivity">
+        <activity android:name=".control.activity.SingleFragmentActivity" />
+        <activity android:name=".control.activity.SignInSignUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".control.activity.SingleFragmentActivity" />
     </application>
 
 </manifest>

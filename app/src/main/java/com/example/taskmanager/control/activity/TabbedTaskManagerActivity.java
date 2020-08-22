@@ -18,6 +18,7 @@ import com.example.taskmanager.control.fragment.DoneTaskListFragment;
 import com.example.taskmanager.control.fragment.TaskListFragment;
 import com.example.taskmanager.control.fragment.TodoTaskListFragment;
 import com.example.taskmanager.model.State;
+import com.example.taskmanager.model.User;
 import com.example.taskmanager.repository.IRepository;
 import com.example.taskmanager.repository.TaskRepository;
 import com.google.android.material.tabs.TabLayout;
@@ -26,8 +27,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.taskmanager.control.fragment.StartManagerFragment.NAME;
-import static com.example.taskmanager.control.fragment.StartManagerFragment.NUMBER_OF_TASKS;
+/*import static com.example.taskmanager.control.fragment.StartManagerFragment.NAME;
+import static com.example.taskmanager.control.fragment.StartManagerFragment.NUMBER_OF_TASKS;*/
 
 public class TabbedTaskManagerActivity extends AppCompatActivity {
     private ViewPager2 mTaskViewPager;
@@ -37,11 +38,12 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
     private IRepository mTaskRepository;
     private String mName;
     private int mNumberOfTasks;
+    private User mCurrentUser;
 
 
-    public static Intent newIntent(Context context) {
+    public static Intent newIntent(Context context, User user) {
         Intent intent = new Intent(context, TabbedTaskManagerActivity.class);
-
+        intent.putExtra("CurrentUser",user);
         return intent;
     }
 
@@ -49,9 +51,9 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_task_manager);
-        mName = getIntent().getStringExtra(NAME);
-        mNumberOfTasks = getIntent().getIntExtra(NUMBER_OF_TASKS, 1);
-
+ /*       mName = getIntent().getStringExtra(NAME);
+        mNumberOfTasks = getIntent().getIntExtra(NUMBER_OF_TASKS, 1);*/
+        mCurrentUser= (User) getIntent().getSerializableExtra("CurrentUser");
         findViews();
         initUI();
     }
@@ -109,11 +111,11 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return TodoTaskListFragment.newInstance();
+                    return TodoTaskListFragment.newInstance(mCurrentUser);
                 case 1:
-                    return DoneTaskListFragment.newInstance();
+                    return DoneTaskListFragment.newInstance(mCurrentUser);
                 default:
-                     return DoingTaskListFragment.newInstance();
+                     return DoingTaskListFragment.newInstance(mCurrentUser);
             }
          /*   Fragment fragment = new TaskListFragment();
             Bundle args = new Bundle();

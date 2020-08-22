@@ -2,6 +2,7 @@ package com.example.taskmanager.repository;
 
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
+import com.example.taskmanager.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,51 +12,48 @@ public class TaskRepository implements IRepository<Task> {
     private static TaskRepository sTaskRepository;
     private static int NUMBER_OF_TASKS;
 
-    private static String taskStartingName;
-
-    public static String getTaskStartingName() {
-        return taskStartingName;
-    }
-
-    public static void setTaskStartingName(String taskStartingName) {
-        TaskRepository.taskStartingName = taskStartingName;
-    }
 
 
-    public static void setNumberOfTasks(int numberOfTasks) {
+    /*public static void setNumberOfTasks(int numberOfTasks) {
         NUMBER_OF_TASKS = numberOfTasks;
-    }
+    }*/
 
-    public static TaskRepository newInstance(String name, int numberOfTasks){
-        sTaskRepository = new TaskRepository(name,numberOfTasks);
+    public static TaskRepository newInstance() {
+
+        sTaskRepository = new TaskRepository();
         return sTaskRepository;
     }
 
     public static TaskRepository getInstance() {
         if (sTaskRepository == null)
-            sTaskRepository = TaskRepository.newInstance("", 1);
+            sTaskRepository = TaskRepository.newInstance();
         return sTaskRepository;
     }
 
     private List<Task> mTasks;
 
-    //************************************************************
-    //Set Repository size and task's starting name here
-    //************************************************************
-    public TaskRepository(String name, int numberOfTasks) {
-        setNumberOfTasks(numberOfTasks);
-        setTaskStartingName(name);
+    public TaskRepository() {
         mTasks = new ArrayList<>();
-        for (int i = 0; i < NUMBER_OF_TASKS; i++) {
+/*        for (int i = 0; i < NUMBER_OF_TASKS; i++) {
             Task task = new Task();
-            task.setTaskName(name + " " + (i + 1));
+            task.setTaskName( " " + (i + 1));
             if (i % 3 == 0)
                 task.setTaskState(State.DOING);
             else if (i % 3 == 1)
                 task.setTaskState(State.TODO);
             else task.setTaskState(State.DONE);
             mTasks.add(task);
+        }*/
+    }
+
+    public List<Task> getUserTasks(User user) {
+        List<Task> tasks = new ArrayList<>();
+        for (Task task : mTasks) {
+            if (task.getTaskInitiator().getID() == user.getID()) {
+                tasks.add(task);
+            }
         }
+        return tasks;
     }
 
     @Override
@@ -64,12 +62,27 @@ public class TaskRepository implements IRepository<Task> {
     }
 
     public List<Task> getStateList(State state) {
-       List<Task> todoList = new ArrayList<>();
+        List<Task> todoList = new ArrayList<>();
         for (Task task : mTasks) {
-            if (task.getTaskState()==state)
+            if (task.getTaskState() == state)
                 todoList.add(task);
         }
         return todoList;
+    }
+
+    /**
+     * user this method to get list of task with this:
+     * @param state and for this :
+     * @param user user
+     * @return
+     */
+    public List<Task> getStateList(State state, User user) {
+        List<Task> taskList = new ArrayList<>();
+        for (Task task : mTasks) {
+            if (task.getTaskState() == state && task.getTaskInitiator().getUserName() .equals(user.getUserName()) )
+                taskList.add(task);
+        }
+        return taskList;
     }
 
     @Override
@@ -88,10 +101,16 @@ public class TaskRepository implements IRepository<Task> {
 
     @Override
     public void update(Task task) {
-        Task updateTask = get(task.getTaskID());
+        mTasks = TaskRepository.getInstance().getList();
+        mTasks.set(mTasks.indexOf(task), task);
+        setList(mTasks);
+    /*    Task updateTask = get(task.getTaskID());
         updateTask.setTaskID(task.getTaskID());
         updateTask.setTaskName(task.getTaskName());
         updateTask.setTaskState(task.getTaskState());
+        updateTask.setTaskDescription(task.getTaskDescription());
+        updateTask.setTaskDate(task.getTaskDate());*/
+
     }
 
     @Override

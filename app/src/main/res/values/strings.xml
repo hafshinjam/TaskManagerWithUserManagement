@@ -17,6 +17,18 @@
     <string name="text">Done</string>
     <string name="save_button">Save</string>
     <string name="date_picker_title">Pick your Date</string>
+    <string name="create_task">"Creating New Dialog"</string>
+    <string name="delete_button">Delete</string>
+    <string name="edit_button">Edit</string>
+    <string name="date_text">Date</string>
+    <string name="task_icon">Task Icon</string>
+    <string name="signup_text">Sign Up</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">User Name</string>
+    <string name="login_text">Log In</string>
+    <string name="login_message">Log In SuccessFul</string>
+    <string name="login_failed_message">There is No Account with this values available</string>
+    <string name="user_name_exists">This User Name Already Exists</string>
     <string-array name="states">
         <item>ToDo</item>
         <item>Doing</item>
