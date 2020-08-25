@@ -34,6 +34,9 @@ public class UserDBRepository implements IRepository<User> {
     public UserDBRepository() {
         UserBaseHelper userBaseHelper = new UserBaseHelper(mContext);
         mDatabase = userBaseHelper.getWritableDatabase();
+        User admin = new User(UUID.randomUUID(),"admin","12345");
+        ContentValues values = getUserContentValues(admin);
+        mDatabase.insert(UserDBSchema.UserTable.NAME,null,values);
     }
 
     @Override
