@@ -15,23 +15,42 @@ public class Task implements Serializable {
     private String taskDescription;
     private State taskState;
     private Date taskDate;
-    private User taskInitiator;
+    private String taskInitiatorUserName;
 
     public Task() {
         taskID = UUID.randomUUID();
     }
 
-    public Task(String taskName, String taskDescription, State taskState, Date taskDate,User taskInitiator) {
+    /**
+     * for new tasks use this constructor (if you have a task already made and want to use those
+     * values use the one with UUID)
+     *
+     * @param taskName
+     * @param taskDescription
+     * @param taskState
+     * @param taskDate
+     * @param taskInitiator
+     */
+    public Task(String taskName, String taskDescription, State taskState, Date taskDate, User taskInitiator) {
         this();
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskState = taskState;
         this.taskDate = taskDate;
-        this.taskInitiator=taskInitiator;
+        this.taskInitiatorUserName = taskInitiator.getUserName();
     }
 
-    public User getTaskInitiator() {
-        return taskInitiator;
+    public Task(UUID uuid, String taskName, String taskDescription, State taskState, Date taskDate, String taskInitiator) {
+        this.taskID = uuid;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.taskState = taskState;
+        this.taskDate = taskDate;
+        this.taskInitiatorUserName = taskInitiator;
+    }
+
+    public String getTaskInitiatorUserName() {
+        return taskInitiatorUserName;
     }
 
     public String getTaskDescription() {

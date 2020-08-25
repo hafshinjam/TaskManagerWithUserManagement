@@ -24,6 +24,7 @@ import com.example.taskmanager.R;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.repository.IRepository;
+import com.example.taskmanager.repository.TaskDBRepository;
 import com.example.taskmanager.repository.TaskRepository;
 
 import java.net.StandardSocketOptions;
@@ -44,7 +45,7 @@ public class EditTaskDialogFragment extends DialogFragment implements AdapterVie
     private Button mDeleteButton;
     private Button mEditButton;
     private Task mCurrentTask;
-    IRepository<Task> taskRepository = TaskRepository.getInstance();
+    IRepository<Task> taskRepository;
 
 
     private final int DATE_PICKER_REQUEST_CODE = 1;
@@ -66,6 +67,7 @@ public class EditTaskDialogFragment extends DialogFragment implements AdapterVie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        taskRepository = TaskDBRepository.getInstance(getActivity());
         if (getArguments() != null) {
             mCurrentTask = (Task) getArguments().getSerializable(CURRENT_TASK_TO_EDIT);
         }

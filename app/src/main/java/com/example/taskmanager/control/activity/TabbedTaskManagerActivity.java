@@ -20,7 +20,7 @@ import com.example.taskmanager.control.fragment.TodoTaskListFragment;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.User;
 import com.example.taskmanager.repository.IRepository;
-import com.example.taskmanager.repository.TaskRepository;
+import com.example.taskmanager.repository.TaskDBRepository;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -43,7 +43,7 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
 
     public static Intent newIntent(Context context, User user) {
         Intent intent = new Intent(context, TabbedTaskManagerActivity.class);
-        intent.putExtra("CurrentUser",user);
+        intent.putExtra("CurrentUser", user);
         return intent;
     }
 
@@ -53,13 +53,13 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tabbed_task_manager);
  /*       mName = getIntent().getStringExtra(NAME);
         mNumberOfTasks = getIntent().getIntExtra(NUMBER_OF_TASKS, 1);*/
-        mCurrentUser= (User) getIntent().getSerializableExtra("CurrentUser");
+        mCurrentUser = (User) getIntent().getSerializableExtra("CurrentUser");
         findViews();
         initUI();
     }
 
     private void initUI() {
-        mTaskRepository =  TaskRepository.getInstance();
+        mTaskRepository = TaskDBRepository.getInstance(this);
 /*        List<TaskListFragment> taskListFragmentList = new ArrayList<TaskListFragment>();
         taskListFragmentList.add(TodoTaskListFragment.newInstance());
         taskListFragmentList.add(DoneTaskListFragment.newInstance());
@@ -115,7 +115,7 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
                 case 1:
                     return DoneTaskListFragment.newInstance(mCurrentUser);
                 default:
-                     return DoingTaskListFragment.newInstance(mCurrentUser);
+                    return DoingTaskListFragment.newInstance(mCurrentUser);
             }
          /*   Fragment fragment = new TaskListFragment();
             Bundle args = new Bundle();

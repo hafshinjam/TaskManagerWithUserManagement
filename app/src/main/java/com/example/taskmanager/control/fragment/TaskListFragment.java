@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
-import com.example.taskmanager.repository.TaskRepository;
+import com.example.taskmanager.repository.TaskDBRepository;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import static com.example.taskmanager.control.fragment.TaskCreateFragment.EXTRA_
 
 
 public class TaskListFragment extends Fragment {
-    protected TaskRepository mTaskRepository;
+    protected TaskDBRepository mTaskRepository;
     public static final String NUMBER_OF_TASKS = "numberOfTasks";
     protected String DIALOG_CREATE_TASK = "com.example.taskmanager.control.fragment.DialogCreateTask";
     public static final String NAME = "Name";
@@ -57,8 +57,8 @@ public class TaskListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTaskRepository = TaskRepository.getInstance();
-       /* mName = mTaskRepository.getTaskStartingName();*/
+        mTaskRepository = TaskDBRepository.getInstance(getActivity());
+        /* mName = mTaskRepository.getTaskStartingName();*/
 
 
     }

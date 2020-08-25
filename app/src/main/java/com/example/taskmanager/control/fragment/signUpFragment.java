@@ -1,18 +1,18 @@
 package com.example.taskmanager.control.fragment;
 
 import android.os.Bundle;
-
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+
 import com.example.taskmanager.R;
 import com.example.taskmanager.model.User;
+import com.example.taskmanager.repository.UserDBRepository;
 import com.example.taskmanager.repository.UserRepository;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,7 +43,7 @@ public class signUpFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUsers = (ArrayList<User>) UserRepository.getInstance().getList();
+        mUsers = (ArrayList<User>) UserDBRepository.getInstance(getActivity()).getList();
     }
 
     @Override
@@ -68,30 +68,29 @@ public class signUpFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mUsers.size() > 0)
-                    for (int i = 0; i <mUsers.size() ; i++) {
-                        if (mUsers.get(i).getUserName().equals(mUserNameText.getText().toString())){
+                    for (int i = 0; i < mUsers.size(); i++) {
+                        if (mUsers.get(i).getUserName().equals(mUserNameText.getText().toString())) {
                             Snackbar.make(mSignUpCoordinatorLayout,
                                     R.string.user_name_exists,
                                     BaseTransientBottomBar.LENGTH_LONG).show();
-                        break;
-                        }
-                        else{
-                            if (i==mUsers.size()-1 &&
-                                    !mUsers.get(i).getUserName().equals(mUserNameText.getText().toString())){
-                                UserRepository.getInstance().insert(
-                                        new User(UUID.randomUUID(),mUserNameText.getText().toString(),
+                            break;
+                        } else {
+                            if (i == mUsers.size() - 1 &&
+                                    !mUsers.get(i).getUserName().equals(mUserNameText.getText().toString())) {
+                                UserDBRepository.getInstance(getActivity()).insert(
+                                        new User(UUID.randomUUID(), mUserNameText.getText().toString(),
                                                 mPasswordText.getText().toString()));
                                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                        signInFragment.newInstance(),"SignInFragment").commit();
+                                        signInFragment.newInstance(), "SignInFragment").commit();
                             }
                         }
                     }
-                else{
-                    UserRepository.getInstance().insert(
-                        new User(UUID.randomUUID(),mUserNameText.getText().toString(),
-                                mPasswordText.getText().toString()));
+                else {
+                    UserDBRepository.getInstance(getActivity()).insert(
+                            new User(UUID.randomUUID(), mUserNameText.getText().toString(),
+                                    mPasswordText.getText().toString()));
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            signInFragment.newInstance(),"SignInFragment").commit();
+                            signInFragment.newInstance(), "SignInFragment").commit();
 
                 }
             }

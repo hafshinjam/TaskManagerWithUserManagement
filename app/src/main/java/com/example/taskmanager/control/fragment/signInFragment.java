@@ -2,21 +2,20 @@ package com.example.taskmanager.control.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+
 import com.example.taskmanager.R;
 import com.example.taskmanager.control.activity.TabbedTaskManagerActivity;
 import com.example.taskmanager.model.User;
 import com.example.taskmanager.repository.IRepository;
-import com.example.taskmanager.repository.UserRepository;
+import com.example.taskmanager.repository.UserDBRepository;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class signInFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserIRepository = UserRepository.getInstance();
+        mUserIRepository = UserDBRepository.getInstance(getActivity());
     }
 
     @Override
