@@ -1,16 +1,15 @@
 package com.example.taskmanager.control.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.control.fragment.DoingTaskListFragment;
@@ -24,20 +23,13 @@ import com.example.taskmanager.repository.TaskDBRepository;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/*import static com.example.taskmanager.control.fragment.StartManagerFragment.NAME;
-import static com.example.taskmanager.control.fragment.StartManagerFragment.NUMBER_OF_TASKS;*/
 
 public class TabbedTaskManagerActivity extends AppCompatActivity {
     private ViewPager2 mTaskViewPager;
-    private FragmentManager mFragmentManager = getSupportFragmentManager();
     private TabLayout mTaskTabsLayout;
-    private TaskPagerAdapter mTaskPagerAdapter;
     private IRepository mTaskRepository;
-    private String mName;
-    private int mNumberOfTasks;
     private User mCurrentUser;
 
 
@@ -51,8 +43,6 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_task_manager);
- /*       mName = getIntent().getStringExtra(NAME);
-        mNumberOfTasks = getIntent().getIntExtra(NUMBER_OF_TASKS, 1);*/
         mCurrentUser = (User) getIntent().getSerializableExtra("CurrentUser");
         findViews();
         initUI();
@@ -60,10 +50,6 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
 
     private void initUI() {
         mTaskRepository = TaskDBRepository.getInstance(this);
-/*        List<TaskListFragment> taskListFragmentList = new ArrayList<TaskListFragment>();
-        taskListFragmentList.add(TodoTaskListFragment.newInstance());
-        taskListFragmentList.add(DoneTaskListFragment.newInstance());
-        taskListFragmentList.add(DoingTaskListFragment.newInstance());*/
         FragmentStateAdapter adapter = new TaskPagerAdapter(this);
         mTaskViewPager.setAdapter(adapter);
         new TabLayoutMediator(mTaskTabsLayout, mTaskViewPager,
@@ -128,11 +114,6 @@ public class TabbedTaskManagerActivity extends AppCompatActivity {
             return 3;
         }
     }
-
-
-    /*public Fragment CreateFragment() {
-        return TodoTaskListFragment.newInstance();
-    }*/
 
     private void findViews() {
         mTaskViewPager = findViewById(R.id.task_view_pager);

@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.control.activity.TaskSearchActivity;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
@@ -116,6 +117,13 @@ public class DoingTaskListFragment extends TaskListFragment {
                 mAdapter.notifyDataSetChanged();
             }
         });
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = TaskSearchActivity.newIntent(getActivity(),CurrentUser);
+                startActivity(intent);
+            }
+        });
     }
 
     private void findViews(View view) {
@@ -123,6 +131,7 @@ public class DoingTaskListFragment extends TaskListFragment {
         mTaskView = view.findViewById(R.id.recycler_view_task_list);
         mImageEmptyList = view.findViewById(R.id.emptyListImage);
         mTextEmptyList = view.findViewById(R.id.emptyListText);
+        mSearchButton = view.findViewById(R.id.floatingSearchButton);
     }
 
     private void updateUI() {

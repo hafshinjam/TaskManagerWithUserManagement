@@ -5,31 +5,24 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
-
 import android.view.LayoutInflater;
 import android.view.View;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.example.taskmanager.R;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
 
 import java.util.Date;
-import java.util.zip.Inflater;
-
-import javax.xml.transform.Result;
 
 import static com.example.taskmanager.control.fragment.DatePickerFragment.EXTRA_USER_SELECTED_DATE;
 import static com.example.taskmanager.control.fragment.TimePickerFragment.EXTRA_USER_SELECTED_TIME;

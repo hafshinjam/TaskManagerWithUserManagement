@@ -4,12 +4,11 @@ package com.example.taskmanager.repository;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.taskmanager.database.UserBaseHelper;
 import com.example.taskmanager.database.UserDBSchema;
-import com.example.taskmanager.database.UserDBSchema.UserTable.*;
+import com.example.taskmanager.database.UserDBSchema.UserTable.COLS;
 import com.example.taskmanager.database.cursorwrapper.UserCursorWrapper;
 import com.example.taskmanager.model.User;
 
