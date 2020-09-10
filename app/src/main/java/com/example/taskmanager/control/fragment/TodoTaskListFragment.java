@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ShareCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
@@ -139,6 +141,7 @@ public class TodoTaskListFragment extends TaskListFragment {
         mImageEmptyList=view.findViewById(R.id.emptyListImage);
         mTextEmptyList=view.findViewById(R.id.emptyListText);
         mSearchButton = view.findViewById(R.id.floatingSearchButton);
+        mAccountManagementButton=view.findViewById(R.id.account_managment_button);
     }
 
     private void updateUI() {
@@ -155,6 +158,7 @@ public class TodoTaskListFragment extends TaskListFragment {
         private TextView mTextViewTaskStatus;
         private TextView mTaskDateText;
         private Button mTaskIcon;
+        private ImageButton mShareTaskButton;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
@@ -162,12 +166,25 @@ public class TodoTaskListFragment extends TaskListFragment {
             mTextViewTaskStatus = itemView.findViewById(R.id.status_row);
             mTaskDateText = itemView.findViewById(R.id.task_date);
             mTaskIcon=itemView.findViewById(R.id.icon_image);
+            mShareTaskButton = itemView.findViewById(R.id.share_button);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     EditTaskDialogFragment editTaskDialogFragment = EditTaskDialogFragment.newInstance(mTask);
                     editTaskDialogFragment.setTargetFragment(TodoTaskListFragment.this, EDIT_TASK_REQUEST_CODE);
                     editTaskDialogFragment.show(getFragmentManager(),"DialogEditTask");
+                }
+            });
+            mShareTaskButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent sendIntent = ShareCompat.IntentBuilder.from(getActivity()).
+                            setType("text/plain").
+                            setSubject("share task").
+                            setText(mTask.getTaskTextToShare()).getIntent();
+                    Intent shareIntent = Intent.createChooser(sendIntent, null);
+                    if (sendIntent.resolveActivity(getActivity().getPackageManager()) != null)
+                        startActivity(shareIntent);
                 }
             });
 

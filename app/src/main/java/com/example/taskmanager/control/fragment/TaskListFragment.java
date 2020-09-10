@@ -35,6 +35,7 @@ public class TaskListFragment extends Fragment {
     protected static final int CREATE_NEW_TASK_REQUEST_CODE = 0;
     protected List<Task> mTaskList;
     protected FloatingActionButton mSearchButton;
+    protected FloatingActionButton mAccountManagementButton;
 
     public TaskListFragment() {
         // Required empty public constructor

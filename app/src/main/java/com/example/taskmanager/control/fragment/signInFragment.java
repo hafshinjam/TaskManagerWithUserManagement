@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 public class signInFragment extends Fragment {
@@ -50,6 +51,12 @@ public class signInFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserIRepository = UserDBRepository.getInstance(getActivity());
+        //temp admin add
+        List<User> userList = mUserIRepository.getList();
+        User admin = new User(UUID.randomUUID(),"admin","12345");
+        if (!userList.contains(admin))
+            mUserIRepository.insert(admin);
+
     }
 
     @Override
@@ -78,13 +85,18 @@ public class signInFragment extends Fragment {
             public void onClick(View view) {
                 List<User> userList = new ArrayList<>();
                 userList = mUserIRepository.getList();
+                User admin = new User(UUID.randomUUID(),"admin","12345");
+                if (!userList.contains(admin)) {
+                    mUserIRepository.insert(admin);
+                    userList.add(admin);
+                }
                 if (!userList.isEmpty()) {
                     for (User account : userList) {
                         if (account.getUserName().equals(mUserNameText.getText().toString())) {
                             if (account.getPassword().equals(mPasswordText.getText().toString())) {
                                 Snackbar.make(mCoordinatorLayout,
                                         getString(R.string.login_message), Snackbar.LENGTH_LONG).show();
-                                Intent intent = TabbedTaskManagerActivity.newIntent(getActivity(),account);
+                                Intent intent = TabbedTaskManagerActivity.newIntent(getActivity(), account);
                                 startActivity(intent);
                             } else Snackbar.make(mCoordinatorLayout,
                                     getString(R.string.login_failed_message), Snackbar.LENGTH_LONG).show();
@@ -97,9 +109,9 @@ public class signInFragment extends Fragment {
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              getFragmentManager().beginTransaction().
-                      replace(R.id.fragment_container,signUpFragment.newInstance(),
-                              "signUpFragment").commit();
+                getFragmentManager().beginTransaction().
+                        replace(R.id.fragment_container, signUpFragment.newInstance(),
+                                "signUpFragment").commit();
             }
         });
     }

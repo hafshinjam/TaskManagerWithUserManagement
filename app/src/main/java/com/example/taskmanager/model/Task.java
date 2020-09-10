@@ -2,23 +2,41 @@ package com.example.taskmanager.model;
 
 
 import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-
+@Entity(tableName = "TaskTable")
 public class Task implements Serializable {
+    @PrimaryKey(autoGenerate = true)
+    private long ID;
+    @ColumnInfo(name = "uuid")
     private UUID taskID;
+    @ColumnInfo(name = "name")
     private String taskName;
+    @ColumnInfo(name = "description")
     private String taskDescription;
+    @ColumnInfo(name = "state")
     private State taskState;
+    @ColumnInfo(name = "date")
     private Date taskDate;
+    @ColumnInfo(name = "initiator")
     private String taskInitiatorUserName;
+    @ColumnInfo(name = "taskPicturePath")
+    private String TaskPicturePath;
 
     public Task() {
         taskID = UUID.randomUUID();
+    }
+
+    public void setTaskInitiatorUserName(String taskInitiatorUserName) {
+        this.taskInitiatorUserName = taskInitiatorUserName;
     }
 
     /**
@@ -47,6 +65,22 @@ public class Task implements Serializable {
         this.taskState = taskState;
         this.taskDate = taskDate;
         this.taskInitiatorUserName = taskInitiator;
+    }
+
+    public long getID() {
+        return ID;
+    }
+
+    public void setID(long ID) {
+        this.ID = ID;
+    }
+
+    public String getTaskPicturePath() {
+        return TaskPicturePath;
+    }
+
+    public void setTaskPicturePath(String taskPicturePath) {
+        TaskPicturePath = taskPicturePath;
     }
 
     public String getTaskInitiatorUserName() {
@@ -118,5 +152,66 @@ public class Task implements Serializable {
 
     public void setTaskState(State taskState) {
         this.taskState = taskState;
+    }
+
+
+    public String getPhotoFileName() {
+        return "IMG_" + getTaskID() + ".jpg";
+    }
+
+    public static class StateConverter {
+        @TypeConverter()
+        public String StateToString(State state) {
+            return state.name();
+        }
+
+        @TypeConverter
+        public State StringToState(String value) {
+            switch (value) {
+                case "TODO":
+                    return State.TODO;
+                case "DONE":
+                    return State.DONE;
+                default:
+                    return State.DOING;
+            }
+        }
+    }
+
+    public static class UUIDConverter {
+        @TypeConverter()
+        public String UUIDToString(UUID uuid) {
+            return uuid.toString();
+        }
+
+        @TypeConverter()
+        public UUID StringToUUID(String value) {
+            return UUID.fromString(value);
+        }
+    }
+
+    public static class DateConverter {
+        @TypeConverter
+        public Date fromTimestamp(Long value) {
+            return value == null ? null : new Date(value);
+        }
+
+        @TypeConverter
+        public Long dateToTimestamp(Date date) {
+            if (date == null) {
+                return null;
+            } else {
+                return date.getTime();
+            }
+        }
+    }
+
+    public String getTaskTextToShare() {
+        return "Task name = " +
+                taskName + ", Description=" +
+                taskDescription + ", Date= " +
+                taskDate + ", Status= " +
+                taskState.name()
+                ;
     }
 }

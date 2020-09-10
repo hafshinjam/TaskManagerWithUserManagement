@@ -1,9 +1,6 @@
 package com.example.taskmanager.repository;
 
 
-import android.database.sqlite.SQLiteDatabase;
-
-import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
 
 import java.util.ArrayList;
@@ -36,7 +33,7 @@ public class UserRepository implements IRepository<User> {
     @Override
     public User get(UUID uuid) {
         for (User user : mUsers) {
-            if (user.getID().equals(uuid))
+            if (user.getUserID().equals(uuid))
                 return user;
         }
         return null;
@@ -56,7 +53,7 @@ public class UserRepository implements IRepository<User> {
     @Override
     public void delete(User user) {
         for (int i = 0; i < mUsers.size(); i++) {
-            if (mUsers.get(i).getID().equals(user.getID())) {
+            if (mUsers.get(i).getUserID().equals(user.getUserID())) {
                 mUsers.remove(i);
                 return;
             }
@@ -77,7 +74,7 @@ public class UserRepository implements IRepository<User> {
     public int getPosition(UUID uuid) {
         List<User> userList = getList();
         for (int i = 0; i < userList.size(); i++) {
-            if (userList.get(i).getID().equals(uuid))
+            if (userList.get(i).getUserID().equals(uuid))
                 return i;
         }
 

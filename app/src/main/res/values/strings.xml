@@ -35,6 +35,7 @@
     <string name="by_description_serach_model">By Description</string>
     <string name="by_name_serach_model">By Name</string>
     <string name="time_button">time</string>
+    <string name="share">Share</string>
     <string-array name="states">
         <item>ToDo</item>
         <item>Doing</item>

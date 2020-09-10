@@ -1,13 +1,10 @@
 package com.example.taskmanager.repository;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-import com.example.taskmanager.database.TaskBaseHelper;
-import com.example.taskmanager.database.TaskDBSchema;
-import com.example.taskmanager.database.cursorwrapper.TaskCursorWrapper;
+import androidx.room.Room;
+
+import com.example.taskmanager.database.TaskDataBase;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
@@ -16,14 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.taskmanager.database.TaskDBSchema.TaskTable.NAME;
-
 public class TaskDBRepository implements IRepository<Task> {
     //memory leak -handle later
     private static TaskDBRepository sTaskRepository;
     private static Context mContext;
 
-    private SQLiteDatabase mDatabase;
+    private TaskDataBase mDatabase;
 
     public static TaskDBRepository getInstance(Context context) {
         mContext = context.getApplicationContext();
@@ -33,9 +28,11 @@ public class TaskDBRepository implements IRepository<Task> {
     }
 
     public TaskDBRepository() {
-        TaskBaseHelper taskBaseHelper = new TaskBaseHelper(mContext);
-        mDatabase = taskBaseHelper.getWritableDatabase();
-
+        mDatabase = Room.databaseBuilder(mContext,
+                TaskDataBase.class,
+                "TaskDB.db")
+                .allowMainThreadQueries()
+                .build();
     }
 
     public List<Task> searchByName(String name) {
@@ -76,26 +73,7 @@ public class TaskDBRepository implements IRepository<Task> {
 
     @Override
     public List<Task> getList() {
-        List<Task> taskList = new ArrayList<>();
-        Cursor cursor = mDatabase.query(NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-        try {
-            TaskCursorWrapper cursorWrapper = new TaskCursorWrapper(cursor);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-
-                taskList.add(cursorWrapper.getTask());
-                cursor.moveToNext();
-            }
-        } finally {
-            cursor.close();
-        }
-        return taskList;
+        return mDatabase.TaskDAO().getTasks();
     }
 
     public List<Task> getUserTasks(User user) {
@@ -136,45 +114,31 @@ public class TaskDBRepository implements IRepository<Task> {
 
     @Override
     public Task get(UUID uuid) {
-        String selection = TaskDBSchema.TaskTable.COLS.TASK_ID + "=?";
-        String[] whereArgs = new String[]{uuid.toString()};
-        Cursor cursor = mDatabase.query(NAME, null,
-                selection, whereArgs,
-                null,
-                null,
-                null);
-        TaskCursorWrapper cursorWrapper = new TaskCursorWrapper(cursor);
-        try {
-            cursorWrapper.moveToFirst();
-            return cursorWrapper.getTask();
-        } finally {
-            cursor.close();
-        }
+        return mDatabase.TaskDAO().getTask(uuid.toString());
     }
 
     @Override
     public void update(Task task) {
-        ContentValues values = getTaskContentValue(task);
-        String[] whereArgs = new String[]{task.getTaskID().toString()};
-        mDatabase.update(NAME, values, TaskDBSchema.TaskTable.COLS.TASK_ID + "=?", whereArgs);
+        mDatabase.TaskDAO()
+                .updateTask(task);
     }
 
     @Override
     public void delete(Task task) {
-        String[] whereARGS = new String[]{task.getTaskID().toString()};
-        String WhereClause = TaskDBSchema.TaskTable.COLS.TASK_ID + "=?";
-        mDatabase.delete(NAME, WhereClause, whereARGS);
+        mDatabase.TaskDAO()
+                .deleteTask(task);
     }
 
     @Override
     public void insert(Task task) {
-        ContentValues values = getTaskContentValue(task);
-        mDatabase.insert(NAME, null, values);
+        mDatabase.TaskDAO().insertTask(task);
     }
 
     @Override
     public void insertList(List<Task> list) {
-
+        Task[] tasks = new Task[list.size()];
+        tasks = list.toArray(tasks);
+        mDatabase.TaskDAO().insertTasks(tasks);
     }
 
     @Override
@@ -185,16 +149,5 @@ public class TaskDBRepository implements IRepository<Task> {
                 return i;
         }
         return -1;
-    }
-
-    private ContentValues getTaskContentValue(Task task) {
-        ContentValues values = new ContentValues();
-        values.put(TaskDBSchema.TaskTable.COLS.TASK_ID, task.getTaskID().toString());
-        values.put(TaskDBSchema.TaskTable.COLS.TASK_NAME, task.getTaskName());
-        values.put(TaskDBSchema.TaskTable.COLS.TASK_DESCRIPTION, task.getTaskDescription());
-        values.put(TaskDBSchema.TaskTable.COLS.TASK_STATE, task.getTaskState().name());
-        values.put(TaskDBSchema.TaskTable.COLS.TASK_DATE, task.getTaskDate().getTime());
-        values.put(TaskDBSchema.TaskTable.COLS.TASK_INITIATOR, task.getTaskInitiatorUserName());
-        return values;
     }
 }
