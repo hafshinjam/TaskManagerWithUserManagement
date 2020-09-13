@@ -8,7 +8,7 @@ import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
 
 @Database(entities = {User.class},version = 1,exportSchema = false)
-@TypeConverters(Task.UUIDConverter.class)
+@TypeConverters({Task.UUIDConverter.class,Task.DateConverter.class})
 public abstract class UserDataBase extends RoomDatabase {
     public abstract UserDataBaseDao UserDao();
 

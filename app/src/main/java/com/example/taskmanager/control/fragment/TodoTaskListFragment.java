@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.UserManagementActivity;
 import com.example.taskmanager.control.activity.TaskSearchActivity;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
@@ -61,7 +62,7 @@ public class TodoTaskListFragment extends TaskListFragment {
         mTasks = new ArrayList<>();
         if (getArguments() != null) {
             CurrentUser = (User) getArguments().getSerializable("CurrentUser");
-            if (CurrentUser.getUserName() .equals("admin"))
+            if (CurrentUser.getUserName().equals("admin"))
                 mTasks = mTaskRepository.getStateList(State.TODO);
             else mTasks = mTaskRepository.getStateList(State.TODO, CurrentUser);
         }
@@ -80,6 +81,8 @@ public class TodoTaskListFragment extends TaskListFragment {
             mTaskView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         setClickListener();
         updateUI();
+        if (!CurrentUser.getUserName().equals("admin"))
+            mAccountManagementButton.setVisibility(View.GONE);
         return view;
     }
 
@@ -90,8 +93,9 @@ public class TodoTaskListFragment extends TaskListFragment {
         isListEmpty();
         mAdapter.notifyDataSetChanged();
     }
+
     protected void isListEmpty() {
-        if (mTasks.size() == 0 ) {
+        if (mTasks.size() == 0) {
             mTextEmptyList.setVisibility(View.VISIBLE);
             mImageEmptyList.setVisibility(View.VISIBLE);
         } else {
@@ -100,8 +104,9 @@ public class TodoTaskListFragment extends TaskListFragment {
         }
 
     }
+
     private void updateList() {
-        if (CurrentUser.getUserName() .equals("admin"))
+        if (CurrentUser.getUserName().equals("admin"))
             mTasks = mTaskRepository.getStateList(State.TODO);
         else mTasks = mTaskRepository.getStateList(State.TODO, CurrentUser);
     }
@@ -110,27 +115,27 @@ public class TodoTaskListFragment extends TaskListFragment {
         mButtonFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mButtonFloating.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Task task = new Task("new Task", "Description", State.TODO,
-                                Calendar.getInstance().getTime(),CurrentUser);
-                        TaskCreateFragment taskCreateFragment = TaskCreateFragment.newInstance(task);
+                Task task = new Task("new Task", "Description", State.TODO,
+                        Calendar.getInstance().getTime(), CurrentUser);
+                TaskCreateFragment taskCreateFragment = TaskCreateFragment.newInstance(task);
 
-                        taskCreateFragment.setTargetFragment(TodoTaskListFragment.this, CREATE_NEW_TASK_REQUEST_CODE);
+                taskCreateFragment.setTargetFragment(TodoTaskListFragment.this, CREATE_NEW_TASK_REQUEST_CODE);
 
-                        taskCreateFragment.show(getFragmentManager(), DIALOG_CREATE_TASK);
-                    }
-                });
-                isListEmpty();
-                mAdapter.notifyDataSetChanged();
+                taskCreateFragment.show(getFragmentManager(), DIALOG_CREATE_TASK);
             }
         });
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Intent intent = TaskSearchActivity.newIntent(getActivity(),CurrentUser);
-            startActivity(intent);
+                Intent intent = TaskSearchActivity.newIntent(getActivity(), CurrentUser);
+                startActivity(intent);
+            }
+        });
+        mAccountManagementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = UserManagementActivity.newIntent(getActivity());
+                startActivity(intent);
             }
         });
     }
@@ -138,10 +143,10 @@ public class TodoTaskListFragment extends TaskListFragment {
     private void findViews(View view) {
         mButtonFloating = view.findViewById(R.id.floatingAddButton);
         mTaskView = view.findViewById(R.id.recycler_view_task_list);
-        mImageEmptyList=view.findViewById(R.id.emptyListImage);
-        mTextEmptyList=view.findViewById(R.id.emptyListText);
+        mImageEmptyList = view.findViewById(R.id.emptyListImage);
+        mTextEmptyList = view.findViewById(R.id.emptyListText);
         mSearchButton = view.findViewById(R.id.floatingSearchButton);
-        mAccountManagementButton=view.findViewById(R.id.account_managment_button);
+        mAccountManagementButton = view.findViewById(R.id.account_managment_button);
     }
 
     private void updateUI() {
@@ -165,14 +170,14 @@ public class TodoTaskListFragment extends TaskListFragment {
             mTextViewTaskName = itemView.findViewById(R.id.name_row);
             mTextViewTaskStatus = itemView.findViewById(R.id.status_row);
             mTaskDateText = itemView.findViewById(R.id.task_date);
-            mTaskIcon=itemView.findViewById(R.id.icon_image);
+            mTaskIcon = itemView.findViewById(R.id.icon_image);
             mShareTaskButton = itemView.findViewById(R.id.share_button);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     EditTaskDialogFragment editTaskDialogFragment = EditTaskDialogFragment.newInstance(mTask);
                     editTaskDialogFragment.setTargetFragment(TodoTaskListFragment.this, EDIT_TASK_REQUEST_CODE);
-                    editTaskDialogFragment.show(getFragmentManager(),"DialogEditTask");
+                    editTaskDialogFragment.show(getFragmentManager(), "DialogEditTask");
                 }
             });
             mShareTaskButton.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +200,7 @@ public class TodoTaskListFragment extends TaskListFragment {
             mTextViewTaskName.setText(task.getTaskName());
             mTextViewTaskStatus.setText(task.getTaskState().toString());
             mTaskDateText.setText(task.getTaskDate().toString());
-            mTaskIcon.setText(task.getTaskName().substring(0,1));
+            mTaskIcon.setText(task.getTaskName().substring(0, 1));
 
         }
     }

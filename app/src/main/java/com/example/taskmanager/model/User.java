@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,6 +19,16 @@ public class User implements Serializable {
     private String mUserName;
     @ColumnInfo(name = "password")
     private String mPassword;
+    @ColumnInfo(name = "regDate")
+    private Date mRegDate;
+
+    public Date getRegDate() {
+        return mRegDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        mRegDate = regDate;
+    }
 
     public User() {
         mUserID = UUID.randomUUID();
@@ -59,6 +70,7 @@ public class User implements Serializable {
         mUserID = UUID.randomUUID();
         mUserName = userName;
         mPassword = password;
+        mRegDate= new Date();
     }
 
     @Override

@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.taskmanager.R;
+import com.example.taskmanager.UserManagementActivity;
 import com.example.taskmanager.control.activity.TaskSearchActivity;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
@@ -75,6 +76,8 @@ public class DoingTaskListFragment extends TaskListFragment {
             mTaskView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         setClickListener();
         updateUI();
+        if (!CurrentUser.getUserName().equals("admin"))
+            mAccountManagementButton.setVisibility(View.GONE);
         return view;
     }
 
@@ -123,6 +126,13 @@ public class DoingTaskListFragment extends TaskListFragment {
             @Override
             public void onClick(View view) {
                 Intent intent = TaskSearchActivity.newIntent(getActivity(),CurrentUser);
+                startActivity(intent);
+            }
+        });
+        mAccountManagementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = UserManagementActivity.newIntent(getActivity());
                 startActivity(intent);
             }
         });

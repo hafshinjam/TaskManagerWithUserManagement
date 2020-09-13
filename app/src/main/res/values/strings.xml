@@ -36,9 +36,11 @@
     <string name="by_name_serach_model">By Name</string>
     <string name="time_button">time</string>
     <string name="share">Share</string>
+    <string name="sign_up_date">Sign Up Date</string>
     <string-array name="states">
         <item>ToDo</item>
         <item>Doing</item>
         <item>Done</item>
     </string-array>
+    <string name="task_count">Number of Tasks: %d$ </string>
 </resources>

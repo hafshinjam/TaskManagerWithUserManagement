@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".control.activity.TaskSearchActivity"></activity>
+        <activity android:name=".UserManagementActivity"></activity>
+        <activity android:name=".control.activity.TaskSearchActivity" />
         <activity android:name=".control.activity.TabbedTaskManagerActivity" />
         <activity android:name=".control.activity.SingleFragmentActivity" />
         <activity android:name=".control.activity.SignInSignUpActivity">

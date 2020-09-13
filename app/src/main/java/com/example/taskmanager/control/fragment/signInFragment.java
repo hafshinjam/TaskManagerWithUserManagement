@@ -30,8 +30,7 @@ public class signInFragment extends Fragment {
     private Button mSignUpButton;
     private Button mLogInButton;
     private CoordinatorLayout mCoordinatorLayout;
-
-    // TODO: Rename and change types of parameters
+    private List<User> mUserList;
 
 
     public signInFragment() {
@@ -52,10 +51,12 @@ public class signInFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mUserIRepository = UserDBRepository.getInstance(getActivity());
         //temp admin add
-        List<User> userList = mUserIRepository.getList();
-        User admin = new User(UUID.randomUUID(),"admin","12345");
-        if (!userList.contains(admin))
+        mUserList = mUserIRepository.getList();
+        User admin = new User(UUID.randomUUID(), "admin", "12345");
+        if (!mUserList.contains(admin)) {
             mUserIRepository.insert(admin);
+        }
+        mUserList = mUserIRepository.getList();
 
     }
 
@@ -83,24 +84,24 @@ public class signInFragment extends Fragment {
         mLogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<User> userList = new ArrayList<>();
-                userList = mUserIRepository.getList();
-                User admin = new User(UUID.randomUUID(),"admin","12345");
-                if (!userList.contains(admin)) {
-                    mUserIRepository.insert(admin);
-                    userList.add(admin);
-                }
-                if (!userList.isEmpty()) {
-                    for (User account : userList) {
-                        if (account.getUserName().equals(mUserNameText.getText().toString())) {
-                            if (account.getPassword().equals(mPasswordText.getText().toString())) {
+                if (!mUserList.isEmpty()) {
+                    for (int i = 0; i < mUserList.size(); i++) {
+                        if (mUserList.get(i).getUserName().equals(mUserNameText.getText().toString())) {
+                            if (mUserList.get(i).getPassword().equals(mPasswordText.getText().toString())) {
                                 Snackbar.make(mCoordinatorLayout,
                                         getString(R.string.login_message), Snackbar.LENGTH_LONG).show();
-                                Intent intent = TabbedTaskManagerActivity.newIntent(getActivity(), account);
+                                Intent intent = TabbedTaskManagerActivity.newIntent(getActivity(), mUserList.get(i));
                                 startActivity(intent);
+                                break;
                             } else Snackbar.make(mCoordinatorLayout,
                                     getString(R.string.login_failed_message), Snackbar.LENGTH_LONG).show();
+                            break;
                         }
+                       else if (i == mUserList.size() - 1 && (!mUserList.get(i).getUserName().
+                                equals(mUserNameText.getText().toString())
+                                || !mUserList.get(i).getPassword().equals(mPasswordText.getText().toString())))
+                            Snackbar.make(mCoordinatorLayout,
+                                    getString(R.string.login_failed_message), Snackbar.LENGTH_LONG).show();
                     }
                 } else Snackbar.make(mCoordinatorLayout,
                         getString(R.string.login_failed_message), Snackbar.LENGTH_LONG).show();
