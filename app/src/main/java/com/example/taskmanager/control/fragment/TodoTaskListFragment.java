@@ -3,31 +3,35 @@ package com.example.taskmanager.control.fragment;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-
+import com.example.taskmanager.PictureSourceChooseFragmentDialog;
+import com.example.taskmanager.PictureUtils;
 import com.example.taskmanager.R;
-import com.example.taskmanager.UserManagementActivity;
 import com.example.taskmanager.control.activity.TaskSearchActivity;
+import com.example.taskmanager.control.activity.UserManagementActivity;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -62,9 +66,10 @@ public class TodoTaskListFragment extends TaskListFragment {
         mTasks = new ArrayList<>();
         if (getArguments() != null) {
             CurrentUser = (User) getArguments().getSerializable("CurrentUser");
-            if (CurrentUser.getUserName().equals("admin"))
-                mTasks = mTaskRepository.getStateList(State.TODO);
-            else mTasks = mTaskRepository.getStateList(State.TODO, CurrentUser);
+            if (CurrentUser != null)
+                if (CurrentUser.getUserName().equals("admin"))
+                    mTasks = mTaskRepository.getStateList(State.TODO);
+                else mTasks = mTaskRepository.getStateList(State.TODO, CurrentUser);
         }
     }
 
@@ -120,8 +125,8 @@ public class TodoTaskListFragment extends TaskListFragment {
                 TaskCreateFragment taskCreateFragment = TaskCreateFragment.newInstance(task);
 
                 taskCreateFragment.setTargetFragment(TodoTaskListFragment.this, CREATE_NEW_TASK_REQUEST_CODE);
-
-                taskCreateFragment.show(getFragmentManager(), DIALOG_CREATE_TASK);
+                if (getFragmentManager() != null)
+                    taskCreateFragment.show(getFragmentManager(), DIALOG_CREATE_TASK);
             }
         });
         mSearchButton.setOnClickListener(new View.OnClickListener() {
@@ -162,8 +167,9 @@ public class TodoTaskListFragment extends TaskListFragment {
         private TextView mTextViewTaskName;
         private TextView mTextViewTaskStatus;
         private TextView mTaskDateText;
-        private Button mTaskIcon;
+        private ImageButton mTaskIcon;
         private ImageButton mShareTaskButton;
+        private File mPhotoFile;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
@@ -183,16 +189,27 @@ public class TodoTaskListFragment extends TaskListFragment {
             mShareTaskButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent sendIntent = ShareCompat.IntentBuilder.from(getActivity()).
-                            setType("text/plain").
-                            setSubject("share task").
-                            setText(mTask.getTaskTextToShare()).getIntent();
-                    Intent shareIntent = Intent.createChooser(sendIntent, null);
-                    if (sendIntent.resolveActivity(getActivity().getPackageManager()) != null)
-                        startActivity(shareIntent);
+                    if (getActivity() != null) {
+                        Intent sendIntent = ShareCompat.IntentBuilder.from(getActivity()).
+                                setType("text/plain").
+                                setSubject("share task").
+                                setText(mTask.getTaskTextToShare()).getIntent();
+                        Intent shareIntent = Intent.createChooser(sendIntent, null);
+                        if (sendIntent.resolveActivity(getActivity().getPackageManager()) != null)
+                            startActivity(shareIntent);
+                    }
                 }
             });
-
+            mTaskIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PictureSourceChooseFragmentDialog fragment = PictureSourceChooseFragmentDialog.newInstance(mTask);
+                    fragment.setTargetFragment(TodoTaskListFragment.this,
+                            CHOSSE_SOURCE_FROM_FRAGMENT_REQUEST_CODE);
+                    if (getFragmentManager() != null)
+                        fragment.show(getFragmentManager(), "ImageSourceChoose");
+                }
+            });
         }
 
         public void bindTask(Task task) {
@@ -200,8 +217,17 @@ public class TodoTaskListFragment extends TaskListFragment {
             mTextViewTaskName.setText(task.getTaskName());
             mTextViewTaskStatus.setText(task.getTaskState().toString());
             mTaskDateText.setText(task.getTaskDate().toString());
-            mTaskIcon.setText(task.getTaskName().substring(0, 1));
+            if (mTask.getTaskPicturePath() != null) {
+                mPhotoFile = new File(mTask.getTaskPicturePath());
 
+                mTaskIcon.setImageURI(Uri.parse(mPhotoFile.getPath()));
+            } else {
+                mPhotoFile = mTaskRepository.generatePhotoFilesDir(getActivity(), task);
+                if (mPhotoFile != null && mPhotoFile.exists()) {
+                    Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+                    mTaskIcon.setImageBitmap(bitmap);
+                }
+            }
         }
     }
 
@@ -229,8 +255,7 @@ public class TodoTaskListFragment extends TaskListFragment {
         public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.task_list_row, parent, false);
-            TaskHolder taskHolder = new TaskHolder(view);
-            return taskHolder;
+            return new TaskHolder(view);
         }
 
         @Override

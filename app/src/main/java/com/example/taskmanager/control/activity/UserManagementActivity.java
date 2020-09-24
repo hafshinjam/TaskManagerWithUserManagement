@@ -1,15 +1,12 @@
-package com.example.taskmanager;
+package com.example.taskmanager.control.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.taskmanager.control.activity.SingleFragmentActivity;
-import com.example.taskmanager.control.activity.TaskSearchActivity;
-import com.example.taskmanager.model.User;
+import com.example.taskmanager.control.fragment.UserManagementFragment;
 
 public class UserManagementActivity extends SingleFragmentActivity {
 

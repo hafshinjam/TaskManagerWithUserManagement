@@ -33,6 +33,8 @@ public class TaskListFragment extends Fragment {
     protected TextView mTextEmptyList;
     protected final int EDIT_TASK_REQUEST_CODE = 3;
     protected static final int CREATE_NEW_TASK_REQUEST_CODE = 0;
+    protected final int CHOSSE_SOURCE_FROM_FRAGMENT_REQUEST_CODE = 4;
+    public static final String FILEPROVIDER_AUTHORITY = "com.example.taskmanager.fileprovider";
     protected List<Task> mTaskList;
     protected FloatingActionButton mSearchButton;
     protected FloatingActionButton mAccountManagementButton;

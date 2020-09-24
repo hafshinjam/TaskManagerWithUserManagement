@@ -9,6 +9,7 @@ import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -149,5 +150,9 @@ public class TaskDBRepository implements IRepository<Task> {
                 return i;
         }
         return -1;
+    }
+
+    public File generatePhotoFilesDir(Context context, Task task) {
+            return new File(context.getFilesDir(), task.generatePhotoFileName());
     }
 }

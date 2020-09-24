@@ -89,14 +89,12 @@ public class EditTaskDialogFragment extends DialogFragment implements AdapterVie
         setListeners();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
-        AlertDialog alertDialog = builder.create();
-/*        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        /*        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.copyFrom(alertDialog.getWindow().getAttributes());
         layoutParams.width=WindowManager.LayoutParams.MATCH_PARENT;
         layoutParams.height=WindowManager.LayoutParams.MATCH_PARENT;
         alertDialog.getWindow().setAttributes(layoutParams);*/
-        return alertDialog;
-
+        return builder.create();
     }
 
     private void initViews(View view) {

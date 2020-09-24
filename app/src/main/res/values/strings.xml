@@ -43,4 +43,7 @@
         <item>Done</item>
     </string-array>
     <string name="task_count">Number of Tasks: %d$ </string>
+    <string name="from_gallery">From Gallery</string>
+    <string name="capture">Capture</string>
+    <string name="task_image">Task Image</string>
 </resources>

@@ -5,7 +5,7 @@
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserManagementFragment" >
+    tools:context=".control.fragment.UserManagementFragment" >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_list_recycler"

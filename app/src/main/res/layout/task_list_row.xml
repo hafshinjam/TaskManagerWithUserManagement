@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <Button
+    <ImageButton
         android:id="@+id/icon_image"
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -15,9 +15,11 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="#00BCD4"
+        android:clickable="true"
         app:layout_constraintEnd_toStartOf="@id/name_row"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/task_image" />
 
     <TextView
         android:id="@+id/name_row"

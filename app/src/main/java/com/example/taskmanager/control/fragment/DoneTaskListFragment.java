@@ -1,10 +1,9 @@
 package com.example.taskmanager.control.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,17 +17,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.taskmanager.PictureSourceChooseFragmentDialog;
+import com.example.taskmanager.PictureUtils;
 import com.example.taskmanager.R;
-import com.example.taskmanager.UserManagementActivity;
+import com.example.taskmanager.control.activity.UserManagementActivity;
 import com.example.taskmanager.control.activity.TaskSearchActivity;
 import com.example.taskmanager.model.State;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -159,8 +160,9 @@ public class DoneTaskListFragment extends TaskListFragment {
         private TextView mTextViewTaskName;
         private TextView mTextViewTaskStatus;
         private TextView mTaskDateText;
-        private Button mTaskIcon;
+        private ImageButton mTaskIcon;
         private ImageButton mShareTaskButton;
+        private File mPhotoFile;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
@@ -189,6 +191,15 @@ public class DoneTaskListFragment extends TaskListFragment {
                         startActivity(shareIntent);
                 }
             });
+            mTaskIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PictureSourceChooseFragmentDialog fragment = PictureSourceChooseFragmentDialog.newInstance(mTask);
+                    fragment.setTargetFragment(DoneTaskListFragment.this,
+                            CHOSSE_SOURCE_FROM_FRAGMENT_REQUEST_CODE);
+                    fragment.show(getFragmentManager(),"ImageSourceChoose");
+                }
+            });
         }
 
         public void bindTask(Task task) {
@@ -196,7 +207,14 @@ public class DoneTaskListFragment extends TaskListFragment {
             mTextViewTaskName.setText(task.getTaskName());
             mTextViewTaskStatus.setText(task.getTaskState().toString());
             mTaskDateText.setText(task.getTaskDate().toString());
-            mTaskIcon.setText(task.getTaskName().substring(0,1));
+            if (mTask.getTaskPicturePath() != null)
+                mPhotoFile = new File(mTask.getTaskPicturePath());
+            else
+                mPhotoFile = mTaskRepository.generatePhotoFilesDir(getActivity(), task);
+            if (mPhotoFile != null && mPhotoFile.exists()) {
+                Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+                mTaskIcon.setImageBitmap(bitmap);
+            }
         }
 
     }
@@ -225,8 +243,7 @@ public class DoneTaskListFragment extends TaskListFragment {
         public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.task_list_row, parent, false);
-            TaskHolder taskHolder = new TaskHolder(view);
-            return taskHolder;
+            return  new TaskHolder(view);
         }
 
         @Override

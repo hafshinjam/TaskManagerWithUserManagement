@@ -1,4 +1,4 @@
-package com.example.taskmanager;
+package com.example.taskmanager.control.fragment;
 
 import android.os.Bundle;
 
@@ -10,14 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.taskmanager.R;
 import com.example.taskmanager.model.Task;
 import com.example.taskmanager.model.User;
 import com.example.taskmanager.repository.TaskDBRepository;
 import com.example.taskmanager.repository.UserDBRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -81,7 +84,14 @@ public class UserManagementFragment extends Fragment {
             mDeleteUserButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                mUserDBRepository.delete(mUser);
+                    User tempUser = mUser;
+                    mUserDBRepository.delete(mUser);
+                    mUserList = mUserDBRepository.getList();
+                    mAdapter.notifyDataSetChanged();
+                    ArrayList<Task> tasks= (ArrayList<Task>) mTaskDBRepository.getUserTasks(tempUser);
+                    for (Task task:tasks) {
+                        mTaskDBRepository.delete(task);
+                    }
                 }
             });
         }

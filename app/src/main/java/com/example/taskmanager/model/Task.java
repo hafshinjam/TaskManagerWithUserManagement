@@ -206,6 +206,10 @@ public class Task implements Serializable {
         }
     }
 
+    public String generatePhotoFileName(){
+        return "IMG"+getTaskID()+".jpg";
+    }
+
     public String getTaskTextToShare() {
         return "Task name = " +
                 taskName + ", Description=" +
