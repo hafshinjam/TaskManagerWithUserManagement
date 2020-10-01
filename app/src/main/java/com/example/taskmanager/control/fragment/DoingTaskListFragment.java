@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -161,7 +164,7 @@ public class DoingTaskListFragment extends TaskListFragment {
         private TextView mTextViewTaskName;
         private TextView mTextViewTaskStatus;
         private TextView mTaskDateText;
-        private ImageButton mTaskIcon;
+        private ImageView mTaskIcon;
         private ImageButton mShareTaskButton;
         private File mPhotoFile;
 
@@ -210,11 +213,10 @@ public class DoingTaskListFragment extends TaskListFragment {
             mTaskDateText.setText(task.getTaskDate().toString());
             if (mTask.getTaskPicturePath() != null)
                 mPhotoFile = new File(mTask.getTaskPicturePath());
-            else
-                mPhotoFile = mTaskRepository.generatePhotoFilesDir(getActivity(), task);
             if (mPhotoFile != null && mPhotoFile.exists()) {
-                Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
-                mTaskIcon.setImageBitmap(bitmap);
+//                Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+                Uri uri = FileProvider.getUriForFile(getContext(),FILEPROVIDER_AUTHORITY,mPhotoFile);
+                mTaskIcon.setImageURI(uri);
             }
         }
     }

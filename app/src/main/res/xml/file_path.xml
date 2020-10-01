@@ -3,4 +3,7 @@
     <files-path
         name="task_image"
         path="." />
+<external-path
+    name="external_path"
+    path="."/>
 </paths>
